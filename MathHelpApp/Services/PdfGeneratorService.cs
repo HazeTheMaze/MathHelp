@@ -1,29 +1,22 @@
+using MathHelpApp.Constants;
 using MathHelpApp.Models;
+using MathHelpApp.Services.PdfComponents;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
 namespace MathHelpApp.Services;
 
-public class PdfGeneratorService : IPdfGeneratorService
+public sealed class PdfGeneratorService : IPdfGeneratorService
 {
+    private const string AppName = "Mattehjälpen";
+
     public byte[] GenerateGridTablePdf(int minTable, int maxTable, bool showAnswers)
     {
-        // Generate problems for each table - multiplication range matches table range
-        var allProblems = new List<(int tableNumber, List<MultiplicationProblem> problems)>();
-        for (int table = minTable; table <= maxTable; table++)
-        {
-            var problems = new List<MultiplicationProblem>();
-            for (int i = 1; i <= maxTable; i++)  // Use maxTable as upper limit
-            {
-                problems.Add(new MultiplicationProblem(table, i));
-            }
-            allProblems.Add((table, problems));
-        }
+        var allProblems = GenerateTableProblems(minTable, maxTable);
 
         var document = Document.Create(container =>
         {
-            // Single page: Times tables reference with answers
             container.Page(page =>
             {
                 page.Size(PageSizes.A4);
@@ -41,38 +34,12 @@ public class PdfGeneratorService : IPdfGeneratorService
                     .Column(column =>
                     {
                         column.Spacing(2);
-
-                        // Display tables in 3 columns
-                        var tablesPerRow = 3;
-                        for (int rowIndex = 0; rowIndex < Math.Ceiling((double)allProblems.Count / tablesPerRow); rowIndex++)
-                        {
-                            column.Item().Row(row =>
-                            {
-                                for (int colIndex = 0; colIndex < tablesPerRow; colIndex++)
-                                {
-                                    var tableIndex = rowIndex * tablesPerRow + colIndex;
-                                    if (tableIndex < allProblems.Count)
-                                    {
-                                        var (tableNumber, problems) = allProblems[tableIndex];
-                                        row.RelativeItem().Component(new TableListComponent(tableNumber, problems, showAnswers));
-                                    }
-                                    else
-                                    {
-                                        row.RelativeItem();
-                                    }
-
-                                    if (colIndex < tablesPerRow - 1)
-                                    {
-                                        row.ConstantItem(8);
-                                    }
-                                }
-                            });
-                        }
+                        RenderTablesInColumns(column, allProblems, showAnswers);
                     });
 
                 page.Footer()
                     .AlignCenter()
-                    .Text("Mattehjälpen")
+                    .Text(AppName)
                     .FontSize(10);
             });
         });
@@ -84,214 +51,141 @@ public class PdfGeneratorService : IPdfGeneratorService
     {
         var document = Document.Create(container =>
         {
-            for (int sheetIndex = 0; sheetIndex < allSheets.Count; sheetIndex++)
+            foreach (var problems in allSheets)
             {
-                var problems = allSheets[sheetIndex];
-
                 // Practice page (no answers)
-                container.Page(page =>
-                {
-                    page.Size(PageSizes.A4);
-                    page.Margin(1.0f, Unit.Centimetre);
-                    page.DefaultTextStyle(x => x.FontSize(12));
+                AddPracticeSheetPage(container, problems, "Multiplikation - Övningsblad", showAnswers: false);
 
-                    page.Header()
-                        .PaddingBottom(10)
-                        .Text("Multiplikation - Övningsblad")
-                        .SemiBold()
-                        .FontSize(20)
-                        .AlignCenter();
-
-                    page.Content()
-                        .Column(column =>
-                        {
-                            column.Spacing(8);
-
-                            // 10 groups in rows of 3: (1,2,3), (4,5,6), (7,8,9), (10)
-                            for (int rowIdx = 0; rowIdx < 4; rowIdx++)
-                            {
-                                column.Item().Row(row =>
-                                {
-                                    for (int colIdx = 0; colIdx < 3; colIdx++)
-                                    {
-                                        var groupIdx = rowIdx * 3 + colIdx;
-                                        if (groupIdx < 10)
-                                        {
-                                            var groupProblems = problems.Skip(groupIdx * 10).Take(10).ToList();
-                                            row.RelativeItem().Component(new PracticeGroupComponent(
-                                                groupProblems, groupIdx * 10 + 1, groupIdx + 1, false));
-                                        }
-                                        else
-                                        {
-                                            row.RelativeItem();
-                                        }
-
-                                        if (colIdx < 2)
-                                        {
-                                            row.ConstantItem(15);
-                                        }
-                                    }
-                                });
-                            }
-                        });
-
-                    page.Footer()
-                        .AlignCenter()
-                        .Text("Mattehjälpen")
-                        .FontSize(10);
-                });
-
-                // Answer key page (same layout with answers)
-                container.Page(page =>
-                {
-                    page.Size(PageSizes.A4);
-                    page.Margin(1.0f, Unit.Centimetre);
-                    page.DefaultTextStyle(x => x.FontSize(12));
-
-                    page.Header()
-                        .PaddingBottom(10)
-                        .Text("Facit")
-                        .SemiBold()
-                        .FontSize(20)
-                        .AlignCenter();
-
-                    page.Content()
-                        .Column(column =>
-                        {
-                            column.Spacing(8);
-
-                            // 10 groups in rows of 3: (1,2,3), (4,5,6), (7,8,9), (10)
-                            for (int rowIdx = 0; rowIdx < 4; rowIdx++)
-                            {
-                                column.Item().Row(row =>
-                                {
-                                    for (int colIdx = 0; colIdx < 3; colIdx++)
-                                    {
-                                        var groupIdx = rowIdx * 3 + colIdx;
-                                        if (groupIdx < 10)
-                                        {
-                                            var groupProblems = problems.Skip(groupIdx * 10).Take(10).ToList();
-                                            row.RelativeItem().Component(new PracticeGroupComponent(
-                                                groupProblems, groupIdx * 10 + 1, groupIdx + 1, true));
-                                        }
-                                        else
-                                        {
-                                            row.RelativeItem();
-                                        }
-
-                                        if (colIdx < 2)
-                                        {
-                                            row.ConstantItem(15);
-                                        }
-                                    }
-                                });
-                            }
-                        });
-
-                    page.Footer()
-                        .AlignCenter()
-                        .Text("Mattehjälpen")
-                        .FontSize(10);
-                });
+                // Answer key page
+                AddPracticeSheetPage(container, problems, "Facit", showAnswers: true);
             }
         });
 
         return document.GeneratePdf();
     }
-}
 
-// Component for a single group of 10 problems
-public class PracticeGroupComponent : IComponent
-{
-    private readonly List<MultiplicationProblem> _problems;
-    private readonly int _startNumber;
-    private readonly int _groupNumber;
-    private readonly bool _showAnswers;
-
-    public PracticeGroupComponent(List<MultiplicationProblem> problems, int startNumber, int groupNumber, bool showAnswers)
+    private static List<(int tableNumber, List<MultiplicationProblem> problems)> GenerateTableProblems(int minTable, int maxTable)
     {
-        _problems = problems;
-        _startNumber = startNumber;
-        _groupNumber = groupNumber;
-        _showAnswers = showAnswers;
-    }
+        var allProblems = new List<(int tableNumber, List<MultiplicationProblem> problems)>();
 
-    public void Compose(IContainer container)
-    {
-        container.Column(column =>
+        for (int table = minTable; table <= maxTable; table++)
         {
-            // Group header
-            column.Item()
-                .PaddingBottom(3)
-                .Text($"Grupp {_groupNumber}")
-                .SemiBold()
-                .FontSize(12);
-
-            // Problems in this group
-            for (int i = 0; i < _problems.Count; i++)
+            var problems = new List<MultiplicationProblem>();
+            for (int i = MathConstants.MinTableNumber; i <= maxTable; i++)
             {
-                var problem = _problems[i];
-                var problemNumber = _startNumber + i;
-                // Format: "  1.   3 x  5 = ____" with proper alignment
-                // Problem number: 3 chars right-aligned, followed by dot and spaces
-                // Multiplicand: 2 chars right-aligned
-                // Multiplier: 2 chars right-aligned  
-                // Answer: 3 chars right-aligned or ____
-                var numStr = problemNumber.ToString().PadLeft(3);
-                var multiplicandStr = problem.Multiplicand.ToString().PadLeft(2);
-                var multiplierStr = problem.Multiplier.ToString().PadLeft(2);
-                var answerText = _showAnswers ? problem.Answer.ToString().PadLeft(3) : "___";
-
-                column.Item().Text($"{numStr}.  {multiplicandStr} x {multiplierStr} = {answerText}")
-                    .FontFamily(Fonts.Courier)
-                    .FontSize(12);
+                problems.Add(new MultiplicationProblem(table, i));
             }
-        });
-    }
-}
 
-// Component for times tables list-style display (no borders)
-public class TableListComponent : IComponent
-{
-    private readonly int _tableNumber;
-    private readonly List<MultiplicationProblem> _problems;
-    private readonly bool _showAnswers;
+            allProblems.Add((table, problems));
+        }
 
-    public TableListComponent(int tableNumber, List<MultiplicationProblem> problems, bool showAnswers)
-    {
-        _tableNumber = tableNumber;
-        _problems = problems;
-        _showAnswers = showAnswers;
+        return allProblems;
     }
 
-    public void Compose(IContainer container)
+    private static void RenderTablesInColumns(
+        ColumnDescriptor column,
+        List<(int tableNumber, List<MultiplicationProblem> problems)> allProblems,
+        bool showAnswers)
     {
-        container.Column(column =>
+        int rowCount = (int)Math.Ceiling((double)allProblems.Count / MathConstants.ColumnsPerRow);
+
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++)
         {
-            column.Item()
-                .PaddingBottom(2)
-                .Text($"Tabell {_tableNumber}")
-                .SemiBold()
-                .FontSize(10);
-
-            column.Item().Padding(1).Column(innerColumn =>
+            column.Item().Row(row =>
             {
-                innerColumn.Spacing(0);
-
-                foreach (var problem in _problems)
+                for (int colIndex = 0; colIndex < MathConstants.ColumnsPerRow; colIndex++)
                 {
-                    // Format: " 3 x  5 =  15" with proper alignment
-                    var multiplicandStr = problem.Multiplicand.ToString().PadLeft(2);
-                    var multiplierStr = problem.Multiplier.ToString().PadLeft(2);
-                    var answerText = _showAnswers ? problem.Answer.ToString().PadLeft(3) : "___";
+                    int tableIndex = rowIndex * MathConstants.ColumnsPerRow + colIndex;
 
-                    innerColumn.Item().Text($"{multiplicandStr} x {multiplierStr} = {answerText}")
-                        .FontFamily(Fonts.Courier)
-                        .FontSize(10);
+                    if (tableIndex < allProblems.Count)
+                    {
+                        var (tableNumber, problems) = allProblems[tableIndex];
+                        row.RelativeItem().Component(new TableListComponent(tableNumber, problems, showAnswers));
+                    }
+                    else
+                    {
+                        row.RelativeItem();
+                    }
+
+                    if (colIndex < MathConstants.ColumnsPerRow - 1)
+                    {
+                        row.ConstantItem(8);
+                    }
                 }
             });
+        }
+    }
 
-            column.Item().PaddingBottom(3);
+    private static void AddPracticeSheetPage(
+        IDocumentContainer container,
+        List<MultiplicationProblem> problems,
+        string title,
+        bool showAnswers)
+    {
+        container.Page(page =>
+        {
+            page.Size(PageSizes.A4);
+            page.Margin(1.0f, Unit.Centimetre);
+            page.DefaultTextStyle(x => x.FontSize(12));
+
+            page.Header()
+                .PaddingBottom(10)
+                .Text(title)
+                .SemiBold()
+                .FontSize(20)
+                .AlignCenter();
+
+            page.Content()
+                .Column(column =>
+                {
+                    column.Spacing(8);
+                    RenderProblemGroups(column, problems, showAnswers);
+                });
+
+            page.Footer()
+                .AlignCenter()
+                .Text(AppName)
+                .FontSize(10);
         });
+    }
+
+    private static void RenderProblemGroups(
+        ColumnDescriptor column,
+        List<MultiplicationProblem> problems,
+        bool showAnswers)
+    {
+        int rowCount = (int)Math.Ceiling((double)MathConstants.GroupsPerSheet / MathConstants.ColumnsPerRow);
+
+        for (int rowIdx = 0; rowIdx < rowCount; rowIdx++)
+        {
+            column.Item().Row(row =>
+            {
+                for (int colIdx = 0; colIdx < MathConstants.ColumnsPerRow; colIdx++)
+                {
+                    int groupIdx = rowIdx * MathConstants.ColumnsPerRow + colIdx;
+
+                    if (groupIdx < MathConstants.GroupsPerSheet)
+                    {
+                        var groupProblems = problems
+                            .Skip(groupIdx * MathConstants.ProblemsPerGroup)
+                            .Take(MathConstants.ProblemsPerGroup)
+                            .ToList();
+
+                        int startNumber = groupIdx * MathConstants.ProblemsPerGroup + 1;
+                        row.RelativeItem().Component(new PracticeGroupComponent(
+                            groupProblems, startNumber, groupIdx + 1, showAnswers));
+                    }
+                    else
+                    {
+                        row.RelativeItem();
+                    }
+
+                    if (colIdx < MathConstants.ColumnsPerRow - 1)
+                    {
+                        row.ConstantItem(15);
+                    }
+                }
+            });
+        }
     }
 }

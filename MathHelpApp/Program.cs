@@ -1,10 +1,18 @@
 using System.Diagnostics;
 using MathHelpApp.Components;
+using MathHelpApp.Endpoints;
 using MathHelpApp.Services;
 using QuestPDF.Infrastructure;
 
 // Configure QuestPDF license (free for personal/educational use)
 QuestPDF.Settings.License = LicenseType.Community;
+
+// Read the configured URL from appsettings.json
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", optional: false)
+    .Build();
+
+var appUrl = configuration["Kestrel:Endpoints:Http:Url"] ?? "http://localhost:5000";
 
 // Single-instance enforcement using a named mutex:
 // - If this is the first instance, continue starting the app
@@ -12,20 +20,7 @@ QuestPDF.Settings.License = LicenseType.Community;
 using var mutex = new Mutex(false, "MattehjalpenAppMutex", out bool isNewInstance);
 if (!isNewInstance)
 {
-    // App is already running, just open the browser
-    try
-    {
-        Process.Start(new ProcessStartInfo
-        {
-            FileName = "http://localhost:5000",
-            UseShellExecute = true
-        });
-    }
-    catch
-    {
-        // Ignore if browser fails to open
-    }
-
+    OpenBrowser(appUrl);
     return; // Exit this instance
 }
 
@@ -40,7 +35,7 @@ builder.Services.AddScoped<IPdfGeneratorService, PdfGeneratorService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
@@ -48,85 +43,31 @@ if (!app.Environment.IsDevelopment())
 
 app.UseAntiforgery();
 
-// API endpoint for grid multiplication table PDF
-app.MapGet("/api/pdf/table", (
-    int minTable,
-    int maxTable,
-    bool showAnswers,
-    IPdfGeneratorService pdfService) =>
-{
-    // Validate input parameters
-    if (minTable < 1 || minTable > 12 || maxTable < 1 || maxTable > 12)
-    {
-        return Results.BadRequest("Tables must be between 1 and 12");
-    }
+// Map API endpoints
+app.MapPdfEndpoints();
 
-    if (minTable > maxTable)
-    {
-        return Results.BadRequest("minTable cannot be greater than maxTable");
-    }
-
-    var pdfBytes = pdfService.GenerateGridTablePdf(minTable, maxTable, showAnswers);
-    var fileName = showAnswers ? "multiplication-table-answers.pdf" : "multiplication-table.pdf";
-    return Results.File(pdfBytes, "application/pdf", fileName);
-}).DisableAntiforgery();
-
-// API endpoint for random practice sheet PDF
-app.MapGet("/api/pdf/practice", (
-    int minTable,
-    int maxTable,
-    int sheetCount,
-    IMultiplicationService mathService,
-    IPdfGeneratorService pdfService) =>
-{
-    // Validate input parameters
-    if (minTable < 1 || minTable > 12 || maxTable < 1 || maxTable > 12)
-    {
-        return Results.BadRequest("Tables must be between 1 and 12");
-    }
-
-    if (minTable > maxTable)
-    {
-        return Results.BadRequest("minTable cannot be greater than maxTable");
-    }
-
-    if (sheetCount < 1 || sheetCount > 100)
-    {
-        return Results.BadRequest("sheetCount must be between 1 and 100");
-    }
-
-    var allSheets = new List<List<MathHelpApp.Models.MultiplicationProblem>>();
-    for (int i = 0; i < sheetCount; i++)
-    {
-        var problems = mathService.GenerateRandomProblems(minTable, maxTable, 100);
-        allSheets.Add(problems);
-    }
-
-    var pdfBytes = pdfService.GeneratePracticeSheetPdf(allSheets);
-    var fileName = sheetCount > 1 ? $"practice-sheets-{sheetCount}.pdf" : "practice-sheet.pdf";
-    return Results.File(pdfBytes, "application/pdf", fileName);
-}).DisableAntiforgery();
-
+// Map Blazor components and static assets
 app.MapRazorComponents<App>();
-
 app.MapStaticAssets();
 
 // Open browser automatically when app starts
-app.Lifetime.ApplicationStarted.Register(() =>
+app.Lifetime.ApplicationStarted.Register(() => OpenBrowser(appUrl));
+
+app.Run();
+
+// Opens the default browser to the specified URL.
+static void OpenBrowser(string url)
 {
-    var url = "http://localhost:5000";
     try
     {
         Process.Start(new ProcessStartInfo
         {
             FileName = url,
-            UseShellExecute = true
+            UseShellExecute = true,
         });
     }
     catch
     {
         // Ignore if browser fails to open
     }
-});
-
-app.Run();
+}
