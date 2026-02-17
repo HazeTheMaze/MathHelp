@@ -1,0 +1,84 @@
+@page "/table-generator"
+@page "/times-tables"
+
+<PageTitle>Multiplikationstabeller</PageTitle>
+
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Hem</a></li>
+            <li class="breadcrumb-item active">Multiplikationstabeller</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-4">Multiplikationstabeller</h1>
+    <p class="text-muted">Skapa ett referensblad med multiplikationstabeller och alla svar för att studera.</p>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form action="/api/pdf/table" method="get" target="_blank">
+                <input type="hidden" name="showAnswers" value="true" />
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="minTable" class="form-label">Minsta tabell</label>
+                        <select id="minTable" name="minTable" class="form-select">
+                            @for (int i = 1; i <= 12; i++)
+                            {
+                                <option value="@i" selected="@(i == 1)">@i</option>
+                            }
+                        </select>
+                        <small class="text-muted">Första tabellen som inkluderas</small>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="maxTable" class="form-label">Största tabell</label>
+                        <select id="maxTable" name="maxTable" class="form-select">
+                            @for (int i = 1; i <= 12; i++)
+                            {
+                                <option value="@i" selected="@(i == 12)">@i</option>
+                            }
+                        </select>
+                        <small class="text-muted">Sista tabellen som inkluderas</small>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        Ladda ner referensblad
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="mb-0">Detta får du</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Referensbladets innehåll:</h6>
+                    <ul>
+                        <li>Tabellerna 1 till 12 (12 tabeller)</li>
+                        <li>Varje tabell: × 1, × 2, × 3 ... × 12</li>
+                        <li>Alla svar inkluderade för studier</li>
+                        <li>3 kolumner - får plats på en sida</li>
+                        <li>Tydligt listformat - lätt att läsa</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6>Exempelformat:</h6>
+                    <div class="bg-light p-3 rounded font-monospace small">
+                        <p class="mb-1"><strong>Tabell 1</strong></p>
+                        <span>&nbsp;1 ×&nbsp;&nbsp;1 =&nbsp;&nbsp;&nbsp;1</span><br>
+                        <span>&nbsp;1 ×&nbsp;&nbsp;2 =&nbsp;&nbsp;&nbsp;2</span><br>
+                        <span>&nbsp;1 ×&nbsp;&nbsp;3 =&nbsp;&nbsp;&nbsp;3</span><br>
+                        <span>...</span><br>
+                        <span>&nbsp;1 × 12 =&nbsp;&nbsp;12</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

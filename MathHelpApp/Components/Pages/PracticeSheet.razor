@@ -1,0 +1,113 @@
+@page "/practice-sheet"
+
+<PageTitle>Övningsblad</PageTitle>
+
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Hem</a></li>
+            <li class="breadcrumb-item active">Övningsblad</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-4">Övningsblad</h1>
+    <p class="text-muted">Skapa slumpade multiplikationsuppgifter för tidstester.</p>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form action="/api/pdf/practice" method="get" target="_blank">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="minTable" class="form-label">Minsta tabell</label>
+                        <select id="minTable" name="minTable" class="form-select">
+                            @for (int i = 1; i <= 12; i++)
+                            {
+                                <option value="@i" selected="@(i == 1)">@i</option>
+                            }
+                        </select>
+                        <small class="text-muted">Lägsta tal i multiplikationen</small>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="maxTable" class="form-label">Största tabell</label>
+                        <select id="maxTable" name="maxTable" class="form-select">
+                            @for (int i = 1; i <= 12; i++)
+                            {
+                                <option value="@i" selected="@(i == 12)">@i</option>
+                            }
+                        </select>
+                        <small class="text-muted">Högsta tal i multiplikationen</small>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="sheetCount" class="form-label">Antal blad</label>
+                        <select id="sheetCount" name="sheetCount" class="form-select">
+                            @for (int i = 1; i <= 10; i++)
+                            {
+                                <option value="@i" selected="@(i == 1)">@i</option>
+                            }
+                        </select>
+                        <small class="text-muted">Varje blad har unika uppgifter</small>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        Ladda ner övningsblad + facit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="mb-0">Detta får du</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Övningsbladets innehåll:</h6>
+                    <ul>
+                        <li>100 slumpade uppgifter per blad</li>
+                        <li>10 grupper om 10 - lätt att räkna</li>
+                        <li>3 kolumner - får plats på en sida</li>
+                        <li>Båda talen mellan 1 och 12</li>
+                        <li>Facit på baksidan (dubbelsidig utskrift)</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6>Exempellayout:</h6>
+                    <div class="bg-light p-3 rounded">
+                        <div class="row font-monospace small">
+                            <div class="col-4">
+                                <strong>Grupp 1</strong><br>
+                                <span>&nbsp;1.&nbsp;&nbsp;3 ×&nbsp;&nbsp;5 = ____</span><br>
+                                <span>&nbsp;2.&nbsp;&nbsp;7 ×&nbsp;&nbsp;2 = ____</span><br>
+                                <span>&nbsp;3.&nbsp;10 ×&nbsp;&nbsp;8 = ____</span><br>
+                                <span>...</span><br>
+                                <span>10.&nbsp;&nbsp;4 ×&nbsp;&nbsp;6 = ____</span>
+                            </div>
+                            <div class="col-4">
+                                <strong>Grupp 2</strong><br>
+                                <span>11.&nbsp;&nbsp;6 ×&nbsp;&nbsp;3 = ____</span><br>
+                                <span>12.&nbsp;&nbsp;9 ×&nbsp;&nbsp;7 = ____</span><br>
+                                <span>13.&nbsp;&nbsp;2 × 11 = ____</span><br>
+                                <span>...</span><br>
+                                <span>20.&nbsp;12 ×&nbsp;&nbsp;5 = ____</span>
+                            </div>
+                            <div class="col-4">
+                                <strong>Grupp 3</strong><br>
+                                <span>21.&nbsp;&nbsp;5 ×&nbsp;&nbsp;4 = ____</span><br>
+                                <span>22.&nbsp;&nbsp;8 ×&nbsp;&nbsp;6 = ____</span><br>
+                                <span>23.&nbsp;11 ×&nbsp;&nbsp;9 = ____</span><br>
+                                <span>...</span><br>
+                                <span>30.&nbsp;&nbsp;1 × 12 = ____</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
