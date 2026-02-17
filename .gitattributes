@@ -1,0 +1,120 @@
+# Auto detect text files and perform LF normalization
+* text=auto eol=lf
+
+###############################
+# Source Code Files           #
+###############################
+
+# C# source files
+*.cs text diff=csharp
+
+# Razor files
+*.razor text diff=html
+*.cshtml text diff=html
+
+# Web files
+*.css text diff=css
+*.scss text diff=css
+*.html text diff=html
+*.htm text diff=html
+*.js text
+*.ts text
+*.json text
+
+# XML-based files
+*.xml text
+*.csproj text diff=xml
+*.slnx text diff=xml
+*.props text diff=xml
+*.targets text diff=xml
+*.ruleset text diff=xml
+*.resx text diff=xml
+*.config text diff=xml
+*.nuspec text diff=xml
+
+# Solution files
+*.sln text eol=crlf
+
+# Markdown and documentation
+*.md text diff=markdown
+*.txt text
+
+###############################
+# Windows-specific Files      #
+###############################
+
+# Force CRLF for Windows scripts
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Inno Setup
+*.iss text eol=crlf
+
+###############################
+# Shell Scripts               #
+###############################
+
+# Force LF for Unix scripts
+*.sh text eol=lf
+
+###############################
+# Binary Files                #
+###############################
+
+# Images
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.svg text
+
+# Fonts
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.eot binary
+
+# Archives
+*.zip binary
+*.7z binary
+*.gz binary
+*.tar binary
+
+# Executables and libraries
+*.exe binary
+*.dll binary
+*.pdb binary
+*.so binary
+*.dylib binary
+
+# Documents
+*.pdf binary
+*.docx binary
+*.xlsx binary
+
+# Other binary
+*.db binary
+*.sqlite binary
+
+###############################
+# Git Large File Storage      #
+###############################
+
+# Uncomment if using Git LFS
+# *.png filter=lfs diff=lfs merge=lfs -text
+# *.pdf filter=lfs diff=lfs merge=lfs -text
+
+###############################
+# Export Ignore               #
+###############################
+
+# Files to exclude from archive exports
+.gitattributes export-ignore
+.gitignore export-ignore
+.editorconfig export-ignore
+.vscode/ export-ignore
+*.md export-ignore

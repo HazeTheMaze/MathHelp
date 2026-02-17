@@ -1,0 +1,255 @@
+# Global analyzer configuration
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/configuration-files
+is_global = true
+
+###############################
+# Code Quality Rules (CA)     #
+###############################
+
+# CA1002: Do not expose generic lists
+dotnet_diagnostic.CA1002.severity = suggestion
+
+# CA1014: Mark assemblies with CLSCompliantAttribute
+dotnet_diagnostic.CA1014.severity = none
+
+# CA1031: Do not catch general exception types
+dotnet_diagnostic.CA1031.severity = suggestion
+
+# CA1062: Validate arguments of public methods
+dotnet_diagnostic.CA1062.severity = warning
+
+# CA1303: Do not pass literals as localized parameters
+dotnet_diagnostic.CA1303.severity = none
+
+# CA1304: Specify CultureInfo
+dotnet_diagnostic.CA1304.severity = suggestion
+
+# CA1305: Specify IFormatProvider
+dotnet_diagnostic.CA1305.severity = suggestion
+
+# CA1307: Specify StringComparison for clarity
+dotnet_diagnostic.CA1307.severity = suggestion
+
+# CA1310: Specify StringComparison for correctness
+dotnet_diagnostic.CA1310.severity = warning
+
+# CA1510-CA1513: Use throw helpers
+dotnet_diagnostic.CA1510.severity = suggestion
+dotnet_diagnostic.CA1511.severity = suggestion
+dotnet_diagnostic.CA1512.severity = suggestion
+dotnet_diagnostic.CA1513.severity = suggestion
+
+# CA1707: Identifiers should not contain underscores (conflicts with _fieldName convention)
+dotnet_diagnostic.CA1707.severity = none
+
+# CA1716: Identifiers should not match keywords
+dotnet_diagnostic.CA1716.severity = suggestion
+
+# CA1720: Identifiers should not contain type names
+dotnet_diagnostic.CA1720.severity = suggestion
+
+# CA1805: Do not initialize unnecessarily
+dotnet_diagnostic.CA1805.severity = suggestion
+
+# CA1812: Avoid uninstantiated internal classes (often false positive with DI)
+dotnet_diagnostic.CA1812.severity = none
+
+# CA1515: Types can be made internal (not applicable - public types needed for DI registration)
+dotnet_diagnostic.CA1515.severity = none
+
+# CA5394: Random is insecure (acceptable for non-security math practice randomization)
+dotnet_diagnostic.CA5394.severity = none
+
+# CA1822: Mark members as static
+dotnet_diagnostic.CA1822.severity = warning
+
+# CA1848: Use LoggerMessage delegates
+dotnet_diagnostic.CA1848.severity = suggestion
+
+# CA1859: Use concrete types when possible for improved performance
+dotnet_diagnostic.CA1859.severity = suggestion
+
+# CA1860: Avoid using 'Enumerable.Any()' extension method
+dotnet_diagnostic.CA1860.severity = suggestion
+
+# CA1861: Avoid constant arrays as arguments
+dotnet_diagnostic.CA1861.severity = warning
+
+# CA2000: Dispose objects before losing scope
+dotnet_diagnostic.CA2000.severity = warning
+
+# CA2007: Do not directly await a Task (not relevant for ASP.NET Core)
+dotnet_diagnostic.CA2007.severity = none
+
+# CA2227: Collection properties should be read only
+dotnet_diagnostic.CA2227.severity = suggestion
+
+# CA2234: Pass System.Uri objects instead of strings
+dotnet_diagnostic.CA2234.severity = suggestion
+
+###############################
+# IDE Rules                   #
+###############################
+
+# IDE0005: Using directive is unnecessary
+dotnet_diagnostic.IDE0005.severity = warning
+
+# IDE0008: Use explicit type instead of var (allow var usage)
+dotnet_diagnostic.IDE0008.severity = none
+
+# IDE0011: Add braces
+dotnet_diagnostic.IDE0011.severity = warning
+
+# IDE0017: Simplify object initialization
+dotnet_diagnostic.IDE0017.severity = suggestion
+
+# IDE0028: Simplify collection initialization
+dotnet_diagnostic.IDE0028.severity = suggestion
+
+# IDE0044: Add readonly modifier
+dotnet_diagnostic.IDE0044.severity = warning
+
+# IDE0051: Remove unused private members
+dotnet_diagnostic.IDE0051.severity = warning
+
+# IDE0052: Remove unread private members
+dotnet_diagnostic.IDE0052.severity = warning
+
+# IDE0055: Fix formatting
+dotnet_diagnostic.IDE0055.severity = warning
+
+# IDE0058: Expression value is never used
+dotnet_diagnostic.IDE0058.severity = silent
+
+# IDE0059: Unnecessary assignment of a value
+dotnet_diagnostic.IDE0059.severity = warning
+
+# IDE0060: Remove unused parameter
+dotnet_diagnostic.IDE0060.severity = warning
+
+# IDE0063: Use simple 'using' statement
+dotnet_diagnostic.IDE0063.severity = suggestion
+
+# IDE0065: 'using' directive placement
+dotnet_diagnostic.IDE0065.severity = warning
+
+# IDE0066: Convert switch statement to expression
+dotnet_diagnostic.IDE0066.severity = suggestion
+
+# IDE0078: Use pattern matching
+dotnet_diagnostic.IDE0078.severity = suggestion
+
+# IDE0090: Use 'new(...)'
+dotnet_diagnostic.IDE0090.severity = suggestion
+
+# IDE0130: Namespace does not match folder structure
+dotnet_diagnostic.IDE0130.severity = suggestion
+
+# IDE0160: Convert to block scoped namespace
+dotnet_diagnostic.IDE0160.severity = none
+
+# IDE0161: Convert to file-scoped namespace
+dotnet_diagnostic.IDE0161.severity = warning
+
+# IDE0270: Use coalesce expression
+dotnet_diagnostic.IDE0270.severity = suggestion
+
+# IDE0290: Use primary constructor
+dotnet_diagnostic.IDE0290.severity = suggestion
+
+# IDE0300: Simplify collection initialization
+dotnet_diagnostic.IDE0300.severity = suggestion
+
+# IDE0301: Simplify collection initialization
+dotnet_diagnostic.IDE0301.severity = suggestion
+
+# IDE0305: Simplify collection initialization
+dotnet_diagnostic.IDE0305.severity = suggestion
+
+###############################
+# Style Rules                 #
+###############################
+
+# SA0001: XML comment analysis is disabled (StyleCop, if used)
+dotnet_diagnostic.SA0001.severity = none
+
+###############################
+# Performance Rules           #
+###############################
+
+# CA1851: Possible multiple enumerations of 'IEnumerable' collection
+dotnet_diagnostic.CA1851.severity = warning
+
+# CA1854: Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method
+dotnet_diagnostic.CA1854.severity = warning
+
+###############################
+# Security Rules              #
+###############################
+
+# CA2100: Review SQL queries for security vulnerabilities
+dotnet_diagnostic.CA2100.severity = warning
+
+# CA3001-CA3012: Various security rules
+dotnet_diagnostic.CA3001.severity = warning
+dotnet_diagnostic.CA3002.severity = warning
+dotnet_diagnostic.CA3003.severity = warning
+dotnet_diagnostic.CA3004.severity = warning
+dotnet_diagnostic.CA3005.severity = warning
+dotnet_diagnostic.CA3006.severity = warning
+dotnet_diagnostic.CA3007.severity = warning
+dotnet_diagnostic.CA3008.severity = warning
+dotnet_diagnostic.CA3009.severity = warning
+dotnet_diagnostic.CA3010.severity = warning
+dotnet_diagnostic.CA3011.severity = warning
+dotnet_diagnostic.CA3012.severity = warning
+
+# CA5350-CA5351: Do not use weak cryptographic algorithms
+dotnet_diagnostic.CA5350.severity = warning
+dotnet_diagnostic.CA5351.severity = warning
+
+###############################
+# Meziantou.Analyzer Rules    #
+###############################
+
+# MA0011: Use IFormatProvider (not critical for integer formatting in math app)
+dotnet_diagnostic.MA0011.severity = suggestion
+
+# MA0016: Prefer collection abstraction (valid but downgrade to suggestion)
+dotnet_diagnostic.MA0016.severity = suggestion
+
+# MA0026: Fix TODO comments (allow TODOs during development)
+dotnet_diagnostic.MA0026.severity = suggestion
+
+# MA0048: File name must match type name (allow small helper classes in same file)
+dotnet_diagnostic.MA0048.severity = suggestion
+
+# MA0051: Method is too long (relax for fluent API chains like QuestPDF)
+dotnet_diagnostic.MA0051.severity = suggestion
+# Configure maximum method length
+dotnet_code_quality.MA0051.maximum_lines_per_method = 80
+
+# MA0004: Use ConfigureAwait (not needed in ASP.NET Core)
+dotnet_diagnostic.MA0004.severity = none
+
+# MA0006: Use string.Equals instead of == (not critical for this app)
+dotnet_diagnostic.MA0006.severity = suggestion
+
+# MA0074: Avoid implicit culture-sensitive methods (suggestion only)
+dotnet_diagnostic.MA0074.severity = suggestion
+
+###############################
+# Roslynator Rules            #
+###############################
+
+# RCS1036: Remove unnecessary blank line
+dotnet_diagnostic.RCS1036.severity = suggestion
+
+# RCS1037: Remove trailing white-space
+dotnet_diagnostic.RCS1037.severity = warning
+
+# RCS1090: Add call to ConfigureAwait (not needed in ASP.NET Core)
+dotnet_diagnostic.RCS1090.severity = none
+
+# RCS1194: Implement exception constructors (not always needed)
+dotnet_diagnostic.RCS1194.severity = suggestion
