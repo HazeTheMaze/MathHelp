@@ -5,6 +5,7 @@
         "Mattehjälpen",
         "Meziantou",
         "Roslynator",
+        "Shouldly",
         "wwwroot"
     ]
 }

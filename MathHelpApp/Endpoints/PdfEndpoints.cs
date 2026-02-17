@@ -71,7 +71,7 @@ public static class PdfEndpoints
     /// Validates that minTable and maxTable are within allowed range.
     /// Returns null if valid, or a BadRequest result if invalid.
     /// </summary>
-    private static IResult? ValidateTableRange(int minTable, int maxTable)
+    internal static IResult? ValidateTableRange(int minTable, int maxTable)
     {
         if (minTable < MathConstants.MinTableNumber || minTable > MathConstants.MaxTableNumber ||
             maxTable < MathConstants.MinTableNumber || maxTable > MathConstants.MaxTableNumber)
