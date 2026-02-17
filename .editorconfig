@@ -301,3 +301,14 @@ indent_size = 4
 
 [*.cshtml]
 indent_size = 4
+
+###############################
+# Razor Code-Behind Files     #
+###############################
+
+# Code-behind files for Razor components
+[*.razor.cs]
+# Inherit all C# rules, with these specific settings:
+# - File-scoped namespaces (already enforced via csharp_style_namespace_declarations)
+# - Partial classes required for code-behind pattern
+# - Organize by: fields, properties, lifecycle methods, other methods
