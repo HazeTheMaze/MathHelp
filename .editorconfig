@@ -147,6 +147,13 @@ csharp_using_directive_placement = outside_namespace:warning
 csharp_style_namespace_declarations = file_scoped:warning
 
 ###############################
+# Sealed Class Preferences    #
+###############################
+
+# MA0053: Enforce sealed on public classes (since this is an app, not a library)
+MA0053.public_class_should_be_sealed = true
+
+###############################
 # C# Formatting Rules         #
 ###############################
 
