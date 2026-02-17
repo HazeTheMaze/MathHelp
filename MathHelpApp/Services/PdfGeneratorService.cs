@@ -1,4 +1,4 @@
-﻿using MathHelpApp.Models;
+using MathHelpApp.Models;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -54,7 +54,7 @@ public class PdfGeneratorService : IPdfGeneratorService
                                     if (tableIndex < allProblems.Count)
                                     {
                                         var (tableNumber, problems) = allProblems[tableIndex];
-                                        row.RelativeItem().Component(new TableListComponent(tableNumber, problems, true));
+                                        row.RelativeItem().Component(new TableListComponent(tableNumber, problems, showAnswers));
                                     }
                                     else
                                     {
