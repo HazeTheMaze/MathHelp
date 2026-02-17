@@ -4,6 +4,9 @@
         "Blazor",
         "Mattehjälpen",
         "Meziantou",
+        "msdata",
+        "resheader",
+        "resmimetype",
         "Roslynator",
         "Shouldly",
         "wwwroot"

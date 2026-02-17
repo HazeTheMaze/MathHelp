@@ -1,0 +1,13 @@
+@inject NavigationManager Navigation
+
+<div class="culture-selector">
+    @{
+        var currentPath = new Uri(Navigation.Uri).PathAndQuery;
+        var returnUrl = string.IsNullOrEmpty(currentPath) || currentPath == "/" ? "/" : currentPath;
+        var enUrl = $"/SetCulture?culture=en&amp;returnUrl={Uri.EscapeDataString(returnUrl)}";
+        var svUrl = $"/SetCulture?culture=sv&amp;returnUrl={Uri.EscapeDataString(returnUrl)}";
+    }
+    <a href="@enUrl" class="culture-link" aria-label="English">EN</a>
+    <span class="culture-separator" aria-hidden="true">|</span>
+    <a href="@svUrl" class="culture-link" aria-label="Svenska">SV</a>
+</div>
