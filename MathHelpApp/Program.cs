@@ -1,4 +1,7 @@
+using System.Globalization;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
 using MathHelpApp.Components;
 using MathHelpApp.Endpoints;
 using MathHelpApp.Services;
@@ -29,6 +32,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container - static server-side rendering only
 builder.Services.AddRazorComponents();
 
+// Localization: English and Swedish
+builder.Services.AddLocalization();
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { new CultureInfo("en"), new CultureInfo("sv") };
+    options.DefaultRequestCulture = new RequestCulture("sv");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
+
 // Register multiplication and PDF services
 builder.Services.AddScoped<IMultiplicationService, MultiplicationService>();
 builder.Services.AddScoped<IPdfGeneratorService, PdfGeneratorService>();
@@ -36,6 +49,7 @@ builder.Services.AddScoped<IPdfGeneratorService, PdfGeneratorService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
+app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
@@ -45,6 +59,22 @@ app.UseAntiforgery();
 
 // Map API endpoints
 app.MapPdfEndpoints();
+
+// Set culture cookie and redirect (for language selector)
+app.MapGet("/SetCulture", (string culture, string? returnUrl, HttpContext context) =>
+{
+    const string cookieName = ".AspNetCore.Culture";
+    const string cookieValuePrefix = "c=";
+    var value = $"{cookieValuePrefix}{culture}|uic={culture}";
+    context.Response.Cookies.Append(cookieName, value, new CookieOptions
+    {
+        Path = "/",
+        SameSite = SameSiteMode.Lax,
+        IsEssential = true,
+        Expires = DateTimeOffset.UtcNow.AddYears(1)
+    });
+    return Results.LocalRedirect(returnUrl ?? "/");
+});
 
 // Map Blazor components and static assets
 app.MapRazorComponents<App>();

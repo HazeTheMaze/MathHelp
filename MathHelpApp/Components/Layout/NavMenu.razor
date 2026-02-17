@@ -1,30 +1,32 @@
+@inject IStringLocalizer<SharedResources> Loc
+
 <div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Mattehjälpen</a>
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <a class="navbar-brand" href="">@Loc["AppName"]</a>
+        <CultureSelector />
     </div>
 </div>
 
-<input type="checkbox" title="Navigeringsmeny" class="navbar-toggler" />
+<input type="checkbox" title="@Loc["NavMenuTitle"]" class="navbar-toggler" />
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="nav flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Hem
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> @Loc["NavHome"]
             </NavLink>
         </div>
 
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="times-tables">
-                <span class="bi bi-grid-3x3-gap-fill-nav-menu" aria-hidden="true"></span> Multiplikationstabeller
+                <span class="bi bi-grid-3x3-gap-fill-nav-menu" aria-hidden="true"></span> @Loc["NavTimesTables"]
             </NavLink>
         </div>
 
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="practice-sheet">
-                <span class="bi bi-pencil-square-nav-menu" aria-hidden="true"></span> Övningsblad
+                <span class="bi bi-pencil-square-nav-menu" aria-hidden="true"></span> @Loc["NavPracticeSheet"]
             </NavLink>
         </div>
     </nav>
 </div>
-

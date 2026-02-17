@@ -1,6 +1,8 @@
 using MathHelpApp.Constants;
 using MathHelpApp.Models;
+using MathHelpApp.Resources;
 using MathHelpApp.Services.PdfComponents;
+using Microsoft.Extensions.Localization;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -9,7 +11,12 @@ namespace MathHelpApp.Services;
 
 public sealed class PdfGeneratorService : IPdfGeneratorService
 {
-    private const string AppName = "Mattehjälpen";
+    private readonly IStringLocalizer<SharedResources> _localizer;
+
+    public PdfGeneratorService(IStringLocalizer<SharedResources> localizer)
+    {
+        _localizer = localizer;
+    }
 
     public byte[] GenerateGridTablePdf(int minTable, int maxTable, bool showAnswers)
     {
@@ -25,7 +32,7 @@ public sealed class PdfGeneratorService : IPdfGeneratorService
 
                 page.Header()
                     .PaddingBottom(6)
-                    .Text($"Multiplikationstabeller ({minTable} - {maxTable})")
+                    .Text(_localizer["MultiplicationTablesRange", minTable, maxTable])
                     .SemiBold()
                     .FontSize(16)
                     .AlignCenter();
@@ -39,7 +46,7 @@ public sealed class PdfGeneratorService : IPdfGeneratorService
 
                 page.Footer()
                     .AlignCenter()
-                    .Text(AppName)
+                    .Text(_localizer["AppName"])
                     .FontSize(10);
             });
         });
@@ -54,10 +61,10 @@ public sealed class PdfGeneratorService : IPdfGeneratorService
             foreach (var problems in allSheets)
             {
                 // Practice page (no answers)
-                AddPracticeSheetPage(container, problems, "Multiplikation - Övningsblad", showAnswers: false);
+                AddPracticeSheetPage(container, problems, _localizer["PracticeSheetTitle"].Value, showAnswers: false);
 
                 // Answer key page
-                AddPracticeSheetPage(container, problems, "Facit", showAnswers: true);
+                AddPracticeSheetPage(container, problems, _localizer["AnswerKeyTitle"].Value, showAnswers: true);
             }
         });
 
@@ -116,7 +123,7 @@ public sealed class PdfGeneratorService : IPdfGeneratorService
         }
     }
 
-    private static void AddPracticeSheetPage(
+    private void AddPracticeSheetPage(
         IDocumentContainer container,
         List<MultiplicationProblem> problems,
         string title,
@@ -144,7 +151,7 @@ public sealed class PdfGeneratorService : IPdfGeneratorService
 
             page.Footer()
                 .AlignCenter()
-                .Text(AppName)
+                .Text(_localizer["AppName"])
                 .FontSize(10);
         });
     }

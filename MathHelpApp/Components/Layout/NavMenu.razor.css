@@ -24,6 +24,25 @@
     font-size: 1.1rem;
 }
 
+.culture-selector {
+    font-size: 0.9rem;
+}
+
+.culture-selector .culture-link {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    padding: 0 0.25rem;
+}
+
+.culture-selector .culture-link:hover {
+    color: white;
+}
+
+.culture-selector .culture-separator {
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0 0.15rem;
+}
+
 .bi {
     display: inline-block;
     position: relative;

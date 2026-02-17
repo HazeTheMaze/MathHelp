@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" msdata:Ordinal="5" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AnswerKeyTitle" xml:space="preserve">
+    <value>Facit</value>
+  </data>
+  <data name="AppName" xml:space="preserve">
+    <value>Mattehjälpen</value>
+  </data>
+  <data name="BtnCreatePracticeSheet" xml:space="preserve">
+    <value>Skapa övningsblad</value>
+  </data>
+  <data name="BtnDownloadPracticeSheets" xml:space="preserve">
+    <value>Ladda ner övningsblad + facit</value>
+  </data>
+  <data name="BtnDownloadReference" xml:space="preserve">
+    <value>Ladda ner referensblad</value>
+  </data>
+  <data name="BtnGetReferenceSheet" xml:space="preserve">
+    <value>Hämta referensblad</value>
+  </data>
+  <data name="CardDescPracticeSheet" xml:space="preserve">
+    <value>100 slumpade uppgifter i 10 grupper om 10. Skriv ut flera blad med facit för tidstester.</value>
+  </data>
+  <data name="CardDescTimesTables" xml:space="preserve">
+    <value>Skapa ett referensblad med alla multiplikationstabeller och svar för att studera och memorera.</value>
+  </data>
+  <data name="CardTitlePracticeSheet" xml:space="preserve">
+    <value>Övningsblad</value>
+  </data>
+  <data name="CardTitleTimesTables" xml:space="preserve">
+    <value>Multiplikationstabeller</value>
+  </data>
+  <data name="CardWhatYouGet" xml:space="preserve">
+    <value>Detta får du</value>
+  </data>
+  <data name="ExampleFormatTitle" xml:space="preserve">
+    <value>Exempelformat:</value>
+  </data>
+  <data name="ExampleLayoutTitle" xml:space="preserve">
+    <value>Exempellayout:</value>
+  </data>
+  <data name="ExampleTable1" xml:space="preserve">
+    <value>Tabell 1</value>
+  </data>
+  <data name="Group1" xml:space="preserve">
+    <value>Grupp 1</value>
+  </data>
+  <data name="Group2" xml:space="preserve">
+    <value>Grupp 2</value>
+  </data>
+  <data name="Group3" xml:space="preserve">
+    <value>Grupp 3</value>
+  </data>
+  <data name="HintFirstTable" xml:space="preserve">
+    <value>Första tabellen som inkluderas</value>
+  </data>
+  <data name="HintHighestNumber" xml:space="preserve">
+    <value>Högsta tal i multiplikationen</value>
+  </data>
+  <data name="HintLastTable" xml:space="preserve">
+    <value>Sista tabellen som inkluderas</value>
+  </data>
+  <data name="HintLowestNumber" xml:space="preserve">
+    <value>Lägsta tal i multiplikationen</value>
+  </data>
+  <data name="HintUniquePerSheet" xml:space="preserve">
+    <value>Varje blad har unika uppgifter</value>
+  </data>
+  <data name="HomeDescription" xml:space="preserve">
+    <value>Skapa multiplikationstabeller och övningsblad för inlärning</value>
+  </data>
+  <data name="LabelMaxTable" xml:space="preserve">
+    <value>Största tabell</value>
+  </data>
+  <data name="LabelMinTable" xml:space="preserve">
+    <value>Minsta tabell</value>
+  </data>
+  <data name="LabelSheetCount" xml:space="preserve">
+    <value>Antal blad</value>
+  </data>
+  <data name="MultiplicationTablesRange" xml:space="preserve">
+    <value>Multiplikationstabeller ({0} - {1})</value>
+  </data>
+  <data name="NavHome" xml:space="preserve">
+    <value>Hem</value>
+  </data>
+  <data name="NavMenuTitle" xml:space="preserve">
+    <value>Navigeringsmeny</value>
+  </data>
+  <data name="NavPracticeSheet" xml:space="preserve">
+    <value>Övningsblad</value>
+  </data>
+  <data name="NavTimesTables" xml:space="preserve">
+    <value>Multiplikationstabeller</value>
+  </data>
+  <data name="PageTitleHome" xml:space="preserve">
+    <value>Mattehjälpen - Hem</value>
+  </data>
+  <data name="PageTitlePracticeSheet" xml:space="preserve">
+    <value>Övningsblad</value>
+  </data>
+  <data name="PageTitleTables" xml:space="preserve">
+    <value>Multiplikationstabeller</value>
+  </data>
+  <data name="PracticeContent1" xml:space="preserve">
+    <value>100 slumpade uppgifter per blad</value>
+  </data>
+  <data name="PracticeContent2" xml:space="preserve">
+    <value>10 grupper om 10 - lätt att räkna</value>
+  </data>
+  <data name="PracticeContent3" xml:space="preserve">
+    <value>3 kolumner - får plats på en sida</value>
+  </data>
+  <data name="PracticeContent4" xml:space="preserve">
+    <value>Båda talen mellan 1 och 12</value>
+  </data>
+  <data name="PracticeContent5" xml:space="preserve">
+    <value>Facit på baksidan (dubbelsidig utskrift)</value>
+  </data>
+  <data name="PracticeContentTitle" xml:space="preserve">
+    <value>Övningsbladets innehåll:</value>
+  </data>
+  <data name="PracticePageDescription" xml:space="preserve">
+    <value>Skapa slumpade multiplikationsuppgifter för tidstester.</value>
+  </data>
+  <data name="PracticeSheetTitle" xml:space="preserve">
+    <value>Multiplikation - Övningsblad</value>
+  </data>
+  <data name="TableContent1" xml:space="preserve">
+    <value>Tabellerna 1 till 12 (12 tabeller)</value>
+  </data>
+  <data name="TableContent2" xml:space="preserve">
+    <value>Varje tabell: × 1, × 2, × 3 ... × 12</value>
+  </data>
+  <data name="TableContent3" xml:space="preserve">
+    <value>Alla svar inkluderade för studier</value>
+  </data>
+  <data name="TableContent4" xml:space="preserve">
+    <value>3 kolumner - får plats på en sida</value>
+  </data>
+  <data name="TableContent5" xml:space="preserve">
+    <value>Tydligt listformat - lätt att läsa</value>
+  </data>
+  <data name="TableContentTitle" xml:space="preserve">
+    <value>Referensbladets innehåll:</value>
+  </data>
+  <data name="TablePageDescription" xml:space="preserve">
+    <value>Skapa ett referensblad med multiplikationstabeller och alla svar för att studera.</value>
+  </data>
+  <data name="NotFoundTitle" xml:space="preserve">
+    <value>Sidan hittades inte</value>
+  </data>
+  <data name="NotFoundMessage" xml:space="preserve">
+    <value>Tyvärr finns inte innehållet du söker.</value>
+  </data>
+</root>

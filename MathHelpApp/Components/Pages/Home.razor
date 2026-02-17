@@ -1,11 +1,12 @@
 @page "/"
+@inject IStringLocalizer<SharedResources> Loc
 
-<PageTitle>Mattehjälpen - Hem</PageTitle>
+<PageTitle>@Loc["PageTitleHome"]</PageTitle>
 
 <div class="container mt-4">
     <div class="text-center mb-5">
-        <h1 class="display-4">Mattehjälpen</h1>
-        <p class="lead text-muted">Skapa multiplikationstabeller och övningsblad för inlärning</p>
+        <h1 class="display-4">@Loc["AppName"]</h1>
+        <p class="lead text-muted">@Loc["HomeDescription"]</p>
     </div>
 
     <div class="row justify-content-center g-4">
@@ -15,12 +16,12 @@
                     <div class="mb-3">
                         <span class="bi bi-grid-3x3-gap-fill display-4 text-primary"></span>
                     </div>
-                    <h3 class="card-title">Multiplikationstabeller</h3>
+                    <h3 class="card-title">@Loc["CardTitleTimesTables"]</h3>
                     <p class="card-text text-muted">
-                        Skapa ett referensblad med alla multiplikationstabeller och svar för att studera och memorera.
+                        @Loc["CardDescTimesTables"]
                     </p>
                     <a href="/times-tables" class="btn btn-primary btn-lg">
-                        <span class="bi bi-table me-2"></span>Hämta referensblad
+                        <span class="bi bi-table me-2"></span>@Loc["BtnGetReferenceSheet"]
                     </a>
                 </div>
             </div>
@@ -32,12 +33,12 @@
                     <div class="mb-3">
                         <span class="bi bi-pencil-square display-4 text-success"></span>
                     </div>
-                    <h3 class="card-title">Övningsblad</h3>
+                    <h3 class="card-title">@Loc["CardTitlePracticeSheet"]</h3>
                     <p class="card-text text-muted">
-                        100 slumpade uppgifter i 10 grupper om 10. Skriv ut flera blad med facit för tidstester.
+                        @Loc["CardDescPracticeSheet"]
                     </p>
                     <a href="/practice-sheet" class="btn btn-success btn-lg">
-                        <span class="bi bi-file-earmark-text me-2"></span>Skapa övningsblad
+                        <span class="bi bi-file-earmark-text me-2"></span>@Loc["BtnCreatePracticeSheet"]
                     </a>
                 </div>
             </div>
