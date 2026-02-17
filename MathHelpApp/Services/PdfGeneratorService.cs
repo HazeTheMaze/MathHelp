@@ -1,4 +1,4 @@
-using MathHelpApp.Models;
+﻿using MathHelpApp.Models;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -127,7 +127,9 @@ public class PdfGeneratorService : IPdfGeneratorService
                                         }
 
                                         if (colIdx < 2)
+                                        {
                                             row.ConstantItem(15);
+                                        }
                                     }
                                 });
                             }
@@ -178,7 +180,9 @@ public class PdfGeneratorService : IPdfGeneratorService
                                         }
 
                                         if (colIdx < 2)
+                                        {
                                             row.ConstantItem(15);
+                                        }
                                     }
                                 });
                             }
