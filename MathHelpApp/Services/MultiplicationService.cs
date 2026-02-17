@@ -1,8 +1,9 @@
-﻿using MathHelpApp.Models;
+using MathHelpApp.Constants;
+using MathHelpApp.Models;
 
 namespace MathHelpApp.Services;
 
-public class MultiplicationService : IMultiplicationService
+public sealed class MultiplicationService : IMultiplicationService
 {
     private readonly Random _random = new();
 
@@ -10,7 +11,7 @@ public class MultiplicationService : IMultiplicationService
     {
         var problems = new List<MultiplicationProblem>();
 
-        for (int i = 1; i <= 12; i++)
+        for (int i = MathConstants.MinTableNumber; i <= MathConstants.MaxTableNumber; i++)
         {
             problems.Add(new MultiplicationProblem(tableNumber, i));
         }
@@ -25,7 +26,7 @@ public class MultiplicationService : IMultiplicationService
         for (int i = 0; i < count; i++)
         {
             int multiplicand = _random.Next(minTable, maxTable + 1);
-            int multiplier = _random.Next(1, maxTable + 1); // Use maxTable as upper limit
+            int multiplier = _random.Next(MathConstants.MinTableNumber, maxTable + 1);
             problems.Add(new MultiplicationProblem(multiplicand, multiplier));
         }
 
