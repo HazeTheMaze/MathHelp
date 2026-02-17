@@ -53,7 +53,7 @@ app.MapStaticAssets();
 // Open browser automatically when app starts
 app.Lifetime.ApplicationStarted.Register(() => OpenBrowser(appUrl));
 
-app.Run();
+await app.RunAsync();
 
 // Opens the default browser to the specified URL.
 static void OpenBrowser(string url)
@@ -66,8 +66,9 @@ static void OpenBrowser(string url)
             UseShellExecute = true,
         });
     }
-    catch
+    catch (Exception ex)
     {
-        // Ignore if browser fails to open
+        // Browser launch is non-critical - log for debugging but don't fail the app
+        Debug.WriteLine($"Failed to open browser: {ex.Message}");
     }
 }
