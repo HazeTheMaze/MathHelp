@@ -35,6 +35,12 @@ The app opens automatically at `http://localhost:5000`.
 dotnet build
 ```
 
+### Run Tests
+
+```bash
+dotnet test
+```
+
 ### Code Quality
 
 This project enforces code quality with:
@@ -53,6 +59,8 @@ MathHelpApp/
 ├── Models/           # Data models
 ├── Services/         # Business logic (PDF generation, problem generation)
 └── wwwroot/          # Static assets
+
+MathHelpApp.Tests/    # Unit tests (NUnit + Shouldly)
 ```
 
 ## License
