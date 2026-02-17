@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using MathHelpApp.Components;
 using MathHelpApp.Services;
 using QuestPDF.Infrastructure;
@@ -55,6 +55,17 @@ app.MapGet("/api/pdf/table", (
     bool showAnswers,
     IPdfGeneratorService pdfService) =>
 {
+    // Validate input parameters
+    if (minTable < 1 || minTable > 12 || maxTable < 1 || maxTable > 12)
+    {
+        return Results.BadRequest("Tables must be between 1 and 12");
+    }
+
+    if (minTable > maxTable)
+    {
+        return Results.BadRequest("minTable cannot be greater than maxTable");
+    }
+
     var pdfBytes = pdfService.GenerateGridTablePdf(minTable, maxTable, showAnswers);
     var fileName = showAnswers ? "multiplication-table-answers.pdf" : "multiplication-table.pdf";
     return Results.File(pdfBytes, "application/pdf", fileName);
@@ -68,6 +79,22 @@ app.MapGet("/api/pdf/practice", (
     IMultiplicationService mathService,
     IPdfGeneratorService pdfService) =>
 {
+    // Validate input parameters
+    if (minTable < 1 || minTable > 12 || maxTable < 1 || maxTable > 12)
+    {
+        return Results.BadRequest("Tables must be between 1 and 12");
+    }
+
+    if (minTable > maxTable)
+    {
+        return Results.BadRequest("minTable cannot be greater than maxTable");
+    }
+
+    if (sheetCount < 1 || sheetCount > 100)
+    {
+        return Results.BadRequest("sheetCount must be between 1 and 100");
+    }
+
     var allSheets = new List<List<MathHelpApp.Models.MultiplicationProblem>>();
     for (int i = 0; i < sheetCount; i++)
     {
