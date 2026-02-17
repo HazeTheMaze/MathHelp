@@ -1,4 +1,4 @@
-namespace MathHelpApp.Models;
+﻿namespace MathHelpApp.Models;
 
 public record MultiplicationProblem(int Multiplicand, int Multiplier)
 {

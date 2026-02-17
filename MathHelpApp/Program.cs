@@ -1,34 +1,32 @@
+﻿using System.Diagnostics;
 using MathHelpApp.Components;
 using MathHelpApp.Services;
 using QuestPDF.Infrastructure;
-using System.Diagnostics;
 
 // Configure QuestPDF license (free for personal/educational use)
 QuestPDF.Settings.License = LicenseType.Community;
 
-// Check if already running - if so, just open browser and exit
-Mutex? mutex = null;
-try
+// Single-instance enforcement using a named mutex:
+// - If this is the first instance, continue starting the app
+// - If another instance is already running, open the browser and exit
+using var mutex = new Mutex(false, "MattehjalpenAppMutex", out bool isNewInstance);
+if (!isNewInstance)
 {
-    mutex = new Mutex(true, "MattehjalpenAppMutex", out bool isNewInstance);
-    if (!isNewInstance)
+    // App is already running, just open the browser
+    try
     {
-        // App is already running, just open the browser
-        try
+        Process.Start(new ProcessStartInfo
         {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "http://localhost:5000",
-                UseShellExecute = true
-            });
-        }
-        catch { }
-        return; // Exit this instance
+            FileName = "http://localhost:5000",
+            UseShellExecute = true
+        });
     }
-}
-catch
-{
-    // If mutex creation fails, continue anyway
+    catch
+    {
+        // Ignore if browser fails to open
+    }
+
+    return; // Exit this instance
 }
 
 var builder = WebApplication.CreateBuilder(args);
@@ -76,7 +74,7 @@ app.MapGet("/api/pdf/practice", (
         var problems = mathService.GenerateRandomProblems(minTable, maxTable, 100);
         allSheets.Add(problems);
     }
-    
+
     var pdfBytes = pdfService.GeneratePracticeSheetPdf(allSheets);
     var fileName = sheetCount > 1 ? $"practice-sheets-{sheetCount}.pdf" : "practice-sheet.pdf";
     return Results.File(pdfBytes, "application/pdf", fileName);
