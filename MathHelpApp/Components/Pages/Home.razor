@@ -1,47 +1,120 @@
 @page "/"
+@rendermode InteractiveServer
 @inject IStringLocalizer<SharedResources> Loc
 
 <PageTitle>@Loc["PageTitleHome"]</PageTitle>
 
-<div class="container mt-4">
-    <div class="text-center mb-5">
-        <h1 class="display-4">@Loc["AppName"]</h1>
-        <p class="lead text-muted">@Loc["HomeDescription"]</p>
-    </div>
+<div class="create-page">
+    <div class="home-hero-card-wrapper">
+        <div class="home-hero-card">
+            <div class="home-card-inner">
+                <p class="home-card-lead text-muted">@Loc["HomeDescription"]</p>
+                <p class="home-category-label text-muted">@Loc["CategoryMultiplication"]</p>
 
-    <div class="row justify-content-center g-4">
-        <div class="col-md-5">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="mb-3">
-                        <span class="bi bi-grid-3x3-gap-fill display-4 text-primary"></span>
-                    </div>
-                    <h3 class="card-title">@Loc["CardTitleTimesTables"]</h3>
-                    <p class="card-text text-muted">
-                        @Loc["CardDescTimesTables"]
-                    </p>
-                    <a href="/times-tables" class="btn btn-primary btn-lg">
-                        <span class="bi bi-table me-2"></span>@Loc["BtnGetReferenceSheet"]
-                    </a>
-                </div>
-            </div>
-        </div>
+                <ul class="home-sheet-tabs" role="tablist">
+                    <li role="presentation">
+                        <button type="button"
+                                role="tab"
+                                aria-selected="@(!_showHelp && selectedType == PdfType.Reference)"
+                                class="home-sheet-tab @(!_showHelp && selectedType == PdfType.Reference ? "active" : "")"
+                                @onclick="@(() => { _showHelp = false; SelectType(PdfType.Reference); })">
+                            @Loc["TabReferensblad"]
+                        </button>
+                    </li>
+                    <li role="presentation">
+                        <button type="button"
+                                role="tab"
+                                aria-selected="@(!_showHelp && selectedType == PdfType.Practice)"
+                                class="home-sheet-tab @(!_showHelp && selectedType == PdfType.Practice ? "active" : "")"
+                                @onclick="@(() => { _showHelp = false; SelectType(PdfType.Practice); })">
+                            @Loc["TabOvningsblad"]
+                        </button>
+                    </li>
+                    <li class="home-sheet-tabs-help" role="presentation">
+                        <button type="button"
+                                role="tab"
+                                aria-selected="@_showHelp"
+                                aria-label="@Loc["TabHelp"]"
+                                class="home-sheet-tab home-sheet-tab-help @(_showHelp ? "active" : "")"
+                                @onclick="@(() => _showHelp = !_showHelp)">
+                            <span class="home-sheet-tab-icon" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M12 16v-4M12 8h.01"/>
+                                </svg>
+                            </span>
+                        </button>
+                    </li>
+                </ul>
 
-        <div class="col-md-5">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="mb-3">
-                        <span class="bi bi-pencil-square display-4 text-success"></span>
+                @if (_showHelp)
+                {
+                    <div class="home-help-content text-muted">
+                        <p class="mb-2">@Loc["HelpIntro"]</p>
+                        <p class="mb-1">@Loc["TableRangeExplanation"]</p>
+                        <p class="mb-0">@Loc["SheetCountExplanation"]</p>
                     </div>
-                    <h3 class="card-title">@Loc["CardTitlePracticeSheet"]</h3>
-                    <p class="card-text text-muted">
-                        @Loc["CardDescPracticeSheet"]
-                    </p>
-                    <a href="/practice-sheet" class="btn btn-success btn-lg">
-                        <span class="bi bi-file-earmark-text me-2"></span>@Loc["BtnCreatePracticeSheet"]
-                    </a>
-                </div>
+                }
+                else
+                {
+                    <form action="@GetFormAction()" method="get" target="_blank" class="home-create-form @(selectedType == PdfType.Reference ? "is-reference" : "is-practice")">
+                        @if (selectedType == PdfType.Reference)
+                        {
+                            <input type="hidden" name="showAnswers" value="true" />
+                        }
+                        <div class="row g-3 home-form-row">
+                            <div class="col-md-4">
+                                <label for="home-minTable" class="form-label">@Loc["LabelFromTable"]</label>
+                                <select id="home-minTable" name="minTable" class="form-select" @bind="_minTable">
+                                    @for (int i = 1; i <= 12; i++)
+                                    {
+                                        <option value="@i" disabled="@(i > _maxTable)">@i</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="home-maxTable" class="form-label">@Loc["LabelToTable"]</label>
+                                <select id="home-maxTable" name="maxTable" class="form-select" @bind="_maxTable">
+                                    @for (int i = 1; i <= 12; i++)
+                                    {
+                                        <option value="@i" disabled="@(i < _minTable)">@i</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-4 home-form-col-sheets">
+                                <label for="home-sheetCount" class="form-label">@Loc["LabelSheetCount"]</label>
+                                <select id="home-sheetCount" name="sheetCount" class="form-select" disabled="@(selectedType == PdfType.Reference)">
+                                    @for (int i = 1; i <= 10; i++)
+                                    {
+                                        <option value="@i" selected="@(i == 1)">@i</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">@Loc["BtnDownloadPdf"]</button>
+                        </div>
+                    </form>
+                }
             </div>
         </div>
     </div>
 </div>
+
+@code {
+    private enum PdfType { Reference, Practice }
+    private PdfType selectedType = PdfType.Reference;
+    private bool _showHelp;
+    private int _minTable = 1;
+    private int _maxTable = 12;
+
+    private void SelectType(PdfType type)
+    {
+        selectedType = type;
+    }
+
+    private string GetFormAction()
+    {
+        return selectedType == PdfType.Reference ? "/api/pdf/table" : "/api/pdf/practice";
+    }
+}
