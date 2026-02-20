@@ -1,107 +1,29 @@
 using System.Globalization;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MathHelpApp.Components;
-using MathHelpApp.Endpoints;
+using MathHelpApp.Resources;
 using MathHelpApp.Services;
-using QuestPDF.Infrastructure;
 
-// Configure QuestPDF license (free for personal/educational use)
-QuestPDF.Settings.License = LicenseType.Community;
+// Default to English so resource lookup finds SharedResources.en.resx (avoids showing keys).
+CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en");
+CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en");
 
-// Read the configured URL from appsettings.json
-var configuration = new ConfigurationBuilder()
-    .AddJsonFile("appsettings.json", optional: false)
-    .Build();
+// Load both en and sv satellite assemblies so Swedish works after culture switch (Blazor WASM only loads satellites for the initial culture otherwise).
+var mainAssembly = typeof(SharedResources).Assembly;
+try { mainAssembly.GetSatelliteAssembly(new CultureInfo("en")); } catch { /* en may be in main assembly */ }
+try { mainAssembly.GetSatelliteAssembly(new CultureInfo("sv")); } catch { /* ignore if missing */ }
 
-var appUrl = configuration["Kestrel:Endpoints:Http:Url"] ?? "http://localhost:5000";
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-// Single-instance enforcement using a named mutex:
-// - If this is the first instance, continue starting the app
-// - If another instance is already running, open the browser and exit
-using var mutex = new Mutex(false, "MattehjalpenAppMutex", out bool isNewInstance);
-if (!isNewInstance)
-{
-    OpenBrowser(appUrl);
-    return; // Exit this instance
-}
+builder.RootComponents.Add<App>("#app");
+builder.RootComponents.Add<HeadOutlet>("head::after");
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container - static SSR + server interactivity for the create page
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
-
-// Localization: English and Swedish
+builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+// Do not set ResourcesPath: our .resx live in MathHelpApp.Resources and are embedded as "MathHelpApp.Resources.SharedResources".
+// With ResourcesPath = "Resources", the factory looks for "MathHelpApp.Resources.Resources.SharedResources" (wrong).
 builder.Services.AddLocalization();
-builder.Services.Configure<RequestLocalizationOptions>(options =>
-{
-    var supportedCultures = new[] { new CultureInfo("en"), new CultureInfo("sv") };
-    options.DefaultRequestCulture = new RequestCulture("sv");
-    options.SupportedCultures = supportedCultures;
-    options.SupportedUICultures = supportedCultures;
-});
-
-// Register multiplication and PDF services
 builder.Services.AddScoped<IMultiplicationService, MultiplicationService>();
-builder.Services.AddScoped<IPdfGeneratorService, PdfGeneratorService>();
+builder.Services.AddScoped<IBrowserPdfService, BrowserPdfService>();
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline
-app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-}
-
-app.UseRouting();
-app.UseAntiforgery();
-
-// Map API endpoints
-app.MapPdfEndpoints();
-
-// Set culture cookie and redirect (for language selector)
-app.MapGet("/SetCulture", (string culture, string? returnUrl, HttpContext context) =>
-{
-    const string cookieName = ".AspNetCore.Culture";
-    const string cookieValuePrefix = "c=";
-    var value = $"{cookieValuePrefix}{culture}|uic={culture}";
-    context.Response.Cookies.Append(cookieName, value, new CookieOptions
-    {
-        Path = "/",
-        SameSite = SameSiteMode.Lax,
-        IsEssential = true,
-        Expires = DateTimeOffset.UtcNow.AddYears(1)
-    });
-    return Results.LocalRedirect(returnUrl ?? "/");
-});
-
-// Map Blazor components and static assets
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
-app.MapStaticAssets();
-
-// Open browser automatically when app starts
-app.Lifetime.ApplicationStarted.Register(() => OpenBrowser(appUrl));
-
-await app.RunAsync();
-
-// Opens the default browser to the specified URL.
-static void OpenBrowser(string url)
-{
-    try
-    {
-        Process.Start(new ProcessStartInfo
-        {
-            FileName = url,
-            UseShellExecute = true,
-        });
-    }
-    catch (Exception ex)
-    {
-        // Browser launch is non-critical - log for debugging but don't fail the app
-        Debug.WriteLine($"Failed to open browser: {ex.Message}");
-    }
-}
+await builder.Build().RunAsync();
