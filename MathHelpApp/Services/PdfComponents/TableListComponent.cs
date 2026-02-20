@@ -29,7 +29,8 @@ public sealed class TableListComponent : IComponent
                 .PaddingBottom(2)
                 .Text($"Tabell {_tableNumber}")
                 .SemiBold()
-                .FontSize(10);
+                .FontSize(10)
+                .FontColor(PdfTheme.AccentGold);
 
             column.Item().Padding(1).Column(innerColumn =>
             {

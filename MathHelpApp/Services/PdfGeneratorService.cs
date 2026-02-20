@@ -32,10 +32,19 @@ public sealed class PdfGeneratorService : IPdfGeneratorService
 
                 page.Header()
                     .PaddingBottom(6)
-                    .Text(_localizer["MultiplicationTablesRange", minTable, maxTable])
-                    .SemiBold()
-                    .FontSize(16)
-                    .AlignCenter();
+                    .Column(col =>
+                    {
+                        col.Item()
+                            .PaddingBottom(4)
+                            .Text(_localizer["MultiplicationTablesRange", minTable, maxTable])
+                            .SemiBold()
+                            .FontSize(16)
+                            .FontColor(PdfTheme.TextDark)
+                            .AlignCenter();
+                        col.Item()
+                            .Height(2)
+                            .Background(PdfTheme.AccentGold);
+                    });
 
                 page.Content()
                     .Column(column =>
@@ -47,7 +56,8 @@ public sealed class PdfGeneratorService : IPdfGeneratorService
                 page.Footer()
                     .AlignCenter()
                     .Text(_localizer["AppName"])
-                    .FontSize(10);
+                    .FontSize(10)
+                    .FontColor(PdfTheme.TextMuted);
             });
         });
 
@@ -137,10 +147,19 @@ public sealed class PdfGeneratorService : IPdfGeneratorService
 
             page.Header()
                 .PaddingBottom(10)
-                .Text(title)
-                .SemiBold()
-                .FontSize(20)
-                .AlignCenter();
+                .Column(col =>
+                {
+                    col.Item()
+                        .PaddingBottom(4)
+                        .Text(title)
+                        .SemiBold()
+                        .FontSize(20)
+                        .FontColor(PdfTheme.TextDark)
+                        .AlignCenter();
+                    col.Item()
+                        .Height(2)
+                        .Background(PdfTheme.AccentGold);
+                });
 
             page.Content()
                 .Column(column =>
@@ -152,7 +171,8 @@ public sealed class PdfGeneratorService : IPdfGeneratorService
             page.Footer()
                 .AlignCenter()
                 .Text(_localizer["AppName"])
-                .FontSize(10);
+                .FontSize(10)
+                .FontColor(PdfTheme.TextMuted);
         });
     }
 

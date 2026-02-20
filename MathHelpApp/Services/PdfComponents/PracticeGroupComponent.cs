@@ -31,7 +31,8 @@ public sealed class PracticeGroupComponent : IComponent
                 .PaddingBottom(3)
                 .Text($"Grupp {_groupNumber}")
                 .SemiBold()
-                .FontSize(12);
+                .FontSize(12)
+                .FontColor(PdfTheme.AccentGold);
 
             for (int i = 0; i < _problems.Count; i++)
             {
