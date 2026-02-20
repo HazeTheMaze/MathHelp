@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Swedish flag. Official proportions 5:2:9 (horizontal) and 4:2:4 (vertical). Public domain: official state symbol. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 10" aria-label="Flag of Sweden">
+  <rect width="16" height="10" fill="#006AA7"/>
+  <rect x="5" y="0" width="2" height="10" fill="#FECC00"/>
+  <rect x="0" y="4" width="16" height="2" fill="#FECC00"/>
+</svg>
