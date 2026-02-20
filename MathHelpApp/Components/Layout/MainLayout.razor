@@ -1,4 +1,6 @@
 @inherits LayoutComponentBase
+@inject NavigationManager Navigation
+@using System.Globalization
 
 <div class="app-layout">
     <header class="app-topbar">
@@ -11,3 +13,28 @@
         </article>
     </main>
 </div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        var uri = Navigation.Uri;
+        var queryStart = uri.IndexOf('?');
+        if (queryStart < 0) return;
+        var query = uri.Substring(queryStart + 1);
+        foreach (var pair in query.Split('&'))
+        {
+            var kv = pair.Split('=');
+            if (kv.Length == 2 && Uri.UnescapeDataString(kv[0].Trim()) == "culture")
+            {
+                var culture = Uri.UnescapeDataString(kv[1].Trim());
+                if (culture == "sv" || culture == "en")
+                {
+                    var ci = new CultureInfo(culture);
+                    CultureInfo.DefaultThreadCurrentCulture = ci;
+                    CultureInfo.DefaultThreadCurrentUICulture = ci;
+                }
+                break;
+            }
+        }
+    }
+}

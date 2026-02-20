@@ -1,10 +1,7 @@
 @inject NavigationManager Navigation
+@inject IJSRuntime JS
 
 @{
-    var currentPath = new Uri(Navigation.Uri).PathAndQuery;
-    var returnUrl = string.IsNullOrEmpty(currentPath) || currentPath == "/" ? "/" : currentPath;
-    var enUrl = $"/SetCulture?culture=en&returnUrl={Uri.EscapeDataString(returnUrl)}";
-    var svUrl = $"/SetCulture?culture=sv&returnUrl={Uri.EscapeDataString(returnUrl)}";
     var currentCulture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 }
 
@@ -16,25 +13,25 @@
             aria-has-popup="true"
             @onclick="Toggle">
         <span class="culture-flag culture-flag-svg" aria-hidden="true">
-            <img src="@(currentCulture == "sv" ? "/images/flags/Flag_of_Sweden.svg" : "/images/flags/Flag_of_Europe.svg")" alt="" loading="lazy" />
+            <img src="@(currentCulture == "sv" ? "images/flags/Flag_of_Sweden.svg" : "images/flags/Flag_of_Europe.svg")" alt="" loading="lazy" />
         </span>
         <span class="culture-chevron" aria-hidden="true">▼</span>
     </button>
     @if (_isOpen)
     {
         <div class="culture-dropdown" role="menu">
-            <a href="@svUrl" class="culture-option" role="menuitem">
+            <button type="button" class="culture-option" role="menuitem" @onclick='() => SetCulture("sv")'>
                 <span class="culture-flag culture-flag-svg" aria-hidden="true">
-                    <img src="/images/flags/Flag_of_Sweden.svg" alt="" loading="lazy" />
+                    <img src="images/flags/Flag_of_Sweden.svg" alt="" loading="lazy" />
                 </span>
                 <span>Svenska</span>
-            </a>
-            <a href="@enUrl" class="culture-option" role="menuitem">
+            </button>
+            <button type="button" class="culture-option" role="menuitem" @onclick='() => SetCulture("en")'>
                 <span class="culture-flag culture-flag-svg" aria-hidden="true">
-                    <img src="/images/flags/Flag_of_Europe.svg" alt="" loading="lazy" />
+                    <img src="images/flags/Flag_of_Europe.svg" alt="" loading="lazy" />
                 </span>
                 <span>English</span>
-            </a>
+            </button>
         </div>
     }
 </div>
@@ -45,5 +42,12 @@
     private void Toggle()
     {
         _isOpen = !_isOpen;
+    }
+
+    private async Task SetCulture(string culture)
+    {
+        _isOpen = false;
+        await JS.InvokeVoidAsync("MathHelpCulture.set", culture);
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
     }
 }
