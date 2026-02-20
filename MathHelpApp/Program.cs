@@ -29,8 +29,9 @@ if (!isNewInstance)
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container - static server-side rendering only
-builder.Services.AddRazorComponents();
+// Add services to the container - static SSR + server interactivity for the create page
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 
 // Localization: English and Swedish
 builder.Services.AddLocalization();
@@ -55,6 +56,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
 }
 
+app.UseRouting();
 app.UseAntiforgery();
 
 // Map API endpoints
@@ -77,7 +79,8 @@ app.MapGet("/SetCulture", (string culture, string? returnUrl, HttpContext contex
 });
 
 // Map Blazor components and static assets
-app.MapRazorComponents<App>();
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 app.MapStaticAssets();
 
 // Open browser automatically when app starts
