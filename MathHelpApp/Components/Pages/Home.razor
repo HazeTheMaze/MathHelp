@@ -1,6 +1,8 @@
 @page "/"
-@rendermode InteractiveServer
 @inject IStringLocalizer<SharedResources> Loc
+@inject IBrowserPdfService PdfService
+@inject IMultiplicationService MathService
+@inject NavigationManager Navigation
 
 <PageTitle>@Loc["PageTitleHome"]</PageTitle>
 
@@ -8,8 +10,7 @@
     <div class="home-hero-card-wrapper">
         <div class="home-hero-card">
             <div class="home-card-inner">
-                <p class="home-card-lead text-muted">@Loc["HomeDescription"]</p>
-                <p class="home-category-label text-muted">@Loc["CategoryMultiplication"]</p>
+                <p class="home-card-title text-muted">@Loc["CategoryMultiplication"]</p>
 
                 <ul class="home-sheet-tabs" role="tablist">
                     <li role="presentation">
@@ -57,15 +58,11 @@
                 }
                 else
                 {
-                    <form action="@GetFormAction()" method="get" target="_blank" class="home-create-form @(selectedType == PdfType.Reference ? "is-reference" : "is-practice")">
-                        @if (selectedType == PdfType.Reference)
-                        {
-                            <input type="hidden" name="showAnswers" value="true" />
-                        }
+                    <div class="home-create-form @(selectedType == PdfType.Reference ? "is-reference" : "is-practice")">
                         <div class="row g-3 home-form-row">
                             <div class="col-md-4">
                                 <label for="home-minTable" class="form-label">@Loc["LabelFromTable"]</label>
-                                <select id="home-minTable" name="minTable" class="form-select" @bind="_minTable">
+                                <select id="home-minTable" class="form-select" @bind="_minTable">
                                     @for (int i = 1; i <= 12; i++)
                                     {
                                         <option value="@i" disabled="@(i > _maxTable)">@i</option>
@@ -74,7 +71,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="home-maxTable" class="form-label">@Loc["LabelToTable"]</label>
-                                <select id="home-maxTable" name="maxTable" class="form-select" @bind="_maxTable">
+                                <select id="home-maxTable" class="form-select" @bind="_maxTable">
                                     @for (int i = 1; i <= 12; i++)
                                     {
                                         <option value="@i" disabled="@(i < _minTable)">@i</option>
@@ -83,18 +80,20 @@
                             </div>
                             <div class="col-md-4 home-form-col-sheets">
                                 <label for="home-sheetCount" class="form-label">@Loc["LabelSheetCount"]</label>
-                                <select id="home-sheetCount" name="sheetCount" class="form-select" disabled="@(selectedType == PdfType.Reference)">
+                                <select id="home-sheetCount" class="form-select" disabled="@(selectedType == PdfType.Reference)" @bind="_sheetCount">
                                     @for (int i = 1; i <= 10; i++)
                                     {
-                                        <option value="@i" selected="@(i == 1)">@i</option>
+                                        <option value="@i">@i</option>
                                     }
                                 </select>
                             </div>
                         </div>
                         <div class="mt-4 text-center">
-                            <button type="submit" class="btn btn-primary btn-lg">@Loc["BtnDownloadPdf"]</button>
+                            <button type="button" class="btn btn-primary btn-lg" disabled="@_downloading" @onclick="OnDownloadPdf">
+                                @(_downloading ? Loc["Loading"] : Loc["BtnDownloadPdf"])
+                            </button>
                         </div>
-                    </form>
+                    </div>
                 }
             </div>
         </div>
@@ -107,14 +106,37 @@
     private bool _showHelp;
     private int _minTable = 1;
     private int _maxTable = 12;
+    private int _sheetCount = 1;
+    private bool _downloading;
 
     private void SelectType(PdfType type)
     {
         selectedType = type;
     }
 
-    private string GetFormAction()
+    private async Task OnDownloadPdf()
     {
-        return selectedType == PdfType.Reference ? "/api/pdf/table" : "/api/pdf/practice";
+        _downloading = true;
+        try
+        {
+            if (selectedType == PdfType.Reference)
+            {
+                await PdfService.DownloadTablePdfAsync(_minTable, _maxTable, showAnswers: true);
+            }
+            else
+            {
+                var allSheets = new List<List<MultiplicationProblem>>();
+                for (int i = 0; i < _sheetCount; i++)
+                {
+                    var problems = MathService.GenerateRandomProblems(_minTable, _maxTable, MathConstants.ProblemsPerSheet);
+                    allSheets.Add(problems);
+                }
+                await PdfService.DownloadPracticePdfAsync(allSheets);
+            }
+        }
+        finally
+        {
+            _downloading = false;
+        }
     }
 }

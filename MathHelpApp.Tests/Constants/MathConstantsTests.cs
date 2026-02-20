@@ -45,9 +45,9 @@ public sealed class MathConstantsTests
     }
 
     [Test]
-    public void ColumnsPerRow_ShouldBe3()
+    public void ColumnsPerRow_ShouldBe2()
     {
-        MathConstants.ColumnsPerRow.ShouldBe(3);
+        MathConstants.ColumnsPerRow.ShouldBe(2);
     }
 
     [Test]
@@ -66,12 +66,8 @@ public sealed class MathConstantsTests
     [Test]
     public void GroupsPerSheet_ShouldBeDivisibleByColumnsPerRow_ForEvenLayout()
     {
-        // This ensures we don't have orphan groups in the last row
-        // Note: Currently 10 groups / 3 columns = 3 full rows + 1 partial
-        // This test documents the current behavior
+        // 2×5 layout: 10 groups / 2 columns = 5 full rows, no orphan groups
         var remainder = MathConstants.GroupsPerSheet % MathConstants.ColumnsPerRow;
-
-        // 10 % 3 = 1, so we have a partial last row
-        remainder.ShouldBe(1);
+        remainder.ShouldBe(0);
     }
 }
