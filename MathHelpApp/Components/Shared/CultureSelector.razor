@@ -1,13 +1,49 @@
 @inject NavigationManager Navigation
 
+@{
+    var currentPath = new Uri(Navigation.Uri).PathAndQuery;
+    var returnUrl = string.IsNullOrEmpty(currentPath) || currentPath == "/" ? "/" : currentPath;
+    var enUrl = $"/SetCulture?culture=en&returnUrl={Uri.EscapeDataString(returnUrl)}";
+    var svUrl = $"/SetCulture?culture=sv&returnUrl={Uri.EscapeDataString(returnUrl)}";
+    var currentCulture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
 <div class="culture-selector">
-    @{
-        var currentPath = new Uri(Navigation.Uri).PathAndQuery;
-        var returnUrl = string.IsNullOrEmpty(currentPath) || currentPath == "/" ? "/" : currentPath;
-        var enUrl = $"/SetCulture?culture=en&amp;returnUrl={Uri.EscapeDataString(returnUrl)}";
-        var svUrl = $"/SetCulture?culture=sv&amp;returnUrl={Uri.EscapeDataString(returnUrl)}";
+    <button type="button"
+            class="culture-trigger"
+            aria-label="@(currentCulture == "sv" ? "Svenska" : "English")"
+            aria-expanded="@_isOpen"
+            aria-has-popup="true"
+            @onclick="Toggle">
+        <span class="culture-flag culture-flag-svg" aria-hidden="true">
+            <img src="@(currentCulture == "sv" ? "/images/flags/Flag_of_Sweden.svg" : "/images/flags/Flag_of_Europe.svg")" alt="" loading="lazy" />
+        </span>
+        <span class="culture-chevron" aria-hidden="true">▼</span>
+    </button>
+    @if (_isOpen)
+    {
+        <div class="culture-dropdown" role="menu">
+            <a href="@svUrl" class="culture-option" role="menuitem">
+                <span class="culture-flag culture-flag-svg" aria-hidden="true">
+                    <img src="/images/flags/Flag_of_Sweden.svg" alt="" loading="lazy" />
+                </span>
+                <span>Svenska</span>
+            </a>
+            <a href="@enUrl" class="culture-option" role="menuitem">
+                <span class="culture-flag culture-flag-svg" aria-hidden="true">
+                    <img src="/images/flags/Flag_of_Europe.svg" alt="" loading="lazy" />
+                </span>
+                <span>English</span>
+            </a>
+        </div>
     }
-    <a href="@enUrl" class="culture-link" aria-label="English">EN</a>
-    <span class="culture-separator" aria-hidden="true">|</span>
-    <a href="@svUrl" class="culture-link" aria-label="Svenska">SV</a>
 </div>
+
+@code {
+    private bool _isOpen;
+
+    private void Toggle()
+    {
+        _isOpen = !_isOpen;
+    }
+}
