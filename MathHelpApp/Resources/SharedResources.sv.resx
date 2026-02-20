@@ -70,6 +70,9 @@
   <data name="BtnDownloadPracticeSheets" xml:space="preserve">
     <value>Ladda ner övningsblad + facit</value>
   </data>
+  <data name="BtnDownloadPdf" xml:space="preserve">
+    <value>Ladda ner PDF</value>
+  </data>
   <data name="BtnDownloadReference" xml:space="preserve">
     <value>Ladda ner referensblad</value>
   </data>
@@ -121,11 +124,26 @@
   <data name="HintLowestNumber" xml:space="preserve">
     <value>Lägsta tal i multiplikationen</value>
   </data>
+  <data name="HintSheetCount" xml:space="preserve">
+    <value>Varje blad har unika uppgifter + facit</value>
+  </data>
   <data name="HintUniquePerSheet" xml:space="preserve">
     <value>Varje blad har unika uppgifter</value>
   </data>
+  <data name="InfoTrigger" xml:space="preserve">
+    <value>Vad betyder detta?</value>
+  </data>
+  <data name="SheetCountExplanation" xml:space="preserve">
+    <value>Antal blad = hur många övningssidor du får. Varje blad har unika uppgifter och eget facit.</value>
+  </data>
+  <data name="CategoryMultiplication" xml:space="preserve">
+    <value>Multiplikation</value>
+  </data>
   <data name="HomeDescription" xml:space="preserve">
     <value>Skapa multiplikationstabeller och övningsblad för inlärning</value>
+  </data>
+  <data name="MascotAlt" xml:space="preserve">
+    <value>Tabbe, Mattehjälpens maskot</value>
   </data>
   <data name="LabelMaxTable" xml:space="preserve">
     <value>Största tabell</value>
@@ -133,8 +151,29 @@
   <data name="LabelMinTable" xml:space="preserve">
     <value>Minsta tabell</value>
   </data>
+  <data name="LabelFromTable" xml:space="preserve">
+    <value>Från tabell</value>
+  </data>
+  <data name="LabelToTable" xml:space="preserve">
+    <value>Till tabell</value>
+  </data>
   <data name="LabelSheetCount" xml:space="preserve">
     <value>Antal blad</value>
+  </data>
+  <data name="TableRangeExplanation" xml:space="preserve">
+    <value>Välj vilka multiplikationstabeller som ska ingå (t.ex. 3 till 7 ger 3×, 4×, 5×, 6× och 7×).</value>
+  </data>
+  <data name="TabReferensblad" xml:space="preserve">
+    <value>Referensblad</value>
+  </data>
+  <data name="TabOvningsblad" xml:space="preserve">
+    <value>Övningsblad</value>
+  </data>
+  <data name="TabHelp" xml:space="preserve">
+    <value>Hjälp</value>
+  </data>
+  <data name="HelpIntro" xml:space="preserve">
+    <value>Här skapar du PDF-blad: referensblad med alla tabeller och svar, eller övningsblad med slumpade uppgifter och facit.</value>
   </data>
   <data name="MultiplicationTablesRange" xml:space="preserve">
     <value>Multiplikationstabeller ({0} - {1})</value>
