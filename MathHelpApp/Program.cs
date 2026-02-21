@@ -20,6 +20,7 @@ builder.Services.AddScoped<IMultiplicationService, MultiplicationService>();
 builder.Services.AddScoped<IBrowserPdfService, BrowserPdfService>();
 
 var host = builder.Build();
+
 try
 {
     var js = host.Services.GetRequiredService<Microsoft.JSInterop.IJSRuntime>();

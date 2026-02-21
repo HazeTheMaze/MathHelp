@@ -4,12 +4,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base id="baseTag" href="/" />
     <script>
         (function () {
             var path = window.location.pathname;
             var base = path.endsWith('/') ? path : path.substring(0, path.lastIndexOf('/') + 1);
             if (!base) base = '/';
-            document.write('<base href="' + base + '">');
+            var el = document.getElementById('baseTag');
+            if (el) el.href = base;
         })();
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,8 +22,8 @@
     <title>Mattehjälpen</title>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" crossorigin="anonymous" defer></script>
     <script src="js/pdf.js" defer></script>
-    <script src="js/culture.js"></script>
-    <script>
+    <script src="js/culture.js" defer></script>
+    <script defer>
         (function () {
             var stored = window.MathHelpCulture && window.MathHelpCulture.get ? window.MathHelpCulture.get() : '';
             if (stored === 'sv' || stored === 'en') {
