@@ -41,6 +41,30 @@ public sealed class TableRangeValidationTests
     }
 
     [Test]
+    public void Validate_WithMinGreaterThanMax_ShouldReturnExactMessage()
+    {
+        var result = TableRangeValidation.Validate(10, 5);
+
+        result.ShouldBe("minTable must be less than or equal to maxTable.");
+    }
+
+    [Test]
+    public void Validate_WithMinTableOutOfRange_ShouldReturnExactMessage()
+    {
+        var result = TableRangeValidation.Validate(0, 5);
+
+        result.ShouldBe("minTable must be between 1 and 12.");
+    }
+
+    [Test]
+    public void Validate_WithMaxTableOutOfRange_ShouldReturnExactMessage()
+    {
+        var result = TableRangeValidation.Validate(1, 13);
+
+        result.ShouldBe("maxTable must be between 1 and 12.");
+    }
+
+    [Test]
     public void Validate_WithOutOfRange_ShouldContainRangeLimits()
     {
         var result = TableRangeValidation.Validate(0, 5);
