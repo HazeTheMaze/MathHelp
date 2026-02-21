@@ -10,11 +10,7 @@ A math learning tool for generating multiplication tables and practice sheets as
 
 ## Running the App
 
-### Option 1: Installer
-
-Download and run `installer.exe` to install the application.
-
-### Option 2: From Source
+Run from source:
 
 ```bash
 cd MathHelpApp
@@ -67,4 +63,4 @@ MathHelpApp.Tests/    # Unit tests (NUnit + Shouldly)
 
 MIT License - see [LICENSE](LICENSE) for details.
 
-Note: This project uses [QuestPDF](https://www.questpdf.com/) under the Community License.
+Note: PDFs are generated in the browser using [jsPDF](https://github.com/parallax/jsPDF).
