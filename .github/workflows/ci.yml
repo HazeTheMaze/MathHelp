@@ -21,4 +21,4 @@ jobs:
         run: dotnet build MathHelp.slnx -c Release
 
       - name: Test
-        run: dotnet test MathHelp.slnx -c Release --no-build
+        run: dotnet test MathHelp.slnx -c Release --no-build --collect:"XPlat Code Coverage"
