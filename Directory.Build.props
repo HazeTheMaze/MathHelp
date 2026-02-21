@@ -31,8 +31,6 @@
     <!-- Warnings - treat all warnings as errors -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningLevel>9999</WarningLevel>
-    <!-- CS1591: Missing XML comment for publicly visible type (doc generation enabled for IDE0005) -->
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
   <!-- Analyzer severity configuration -->

@@ -7,6 +7,7 @@ public sealed partial class App
 {
     private bool _cultureReady;
 
+    /// <inheritdoc />
     protected override void OnInitialized()
     {
         _cultureReady = true;

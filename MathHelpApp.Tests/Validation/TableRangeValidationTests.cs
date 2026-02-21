@@ -31,19 +31,11 @@ public sealed class TableRangeValidationTests
     }
 
     [Test]
-    public void Validate_WithMinGreaterThanMax_ShouldReturnErrorMessage()
-    {
-        var result = TableRangeValidation.Validate(10, 5);
-
-        result.ShouldNotBeNull();
-        result.ShouldBe("Validation.MinGreaterThanMax");
-    }
-
-    [Test]
     public void Validate_WithMinGreaterThanMax_ShouldReturnExactMessage()
     {
         var result = TableRangeValidation.Validate(10, 5);
 
+        result.ShouldNotBeNull();
         result.ShouldBe("Validation.MinGreaterThanMax");
     }
 

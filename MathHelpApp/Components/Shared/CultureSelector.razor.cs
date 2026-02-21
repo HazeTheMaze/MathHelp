@@ -1,18 +1,24 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using MathHelpApp.Resources;
 using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 
 namespace MathHelpApp.Components.Shared;
 
+/// <summary>
+/// UI for switching between supported cultures (e.g. EN/SV).
+/// </summary>
 public sealed partial class CultureSelector
 {
+    /// <summary>Used to reload the page after culture change.</summary>
     [Inject]
     public NavigationManager Navigation { get; set; } = null!;
 
+    /// <summary>Used to call MathHelpCulture.set for persisting culture.</summary>
     [Inject]
     public IJSRuntime Js { get; set; } = null!;
 
+    /// <summary>Localized strings for the selector.</summary>
     [Inject]
     public IStringLocalizer<SharedResources> Loc { get; set; } = null!;
 
