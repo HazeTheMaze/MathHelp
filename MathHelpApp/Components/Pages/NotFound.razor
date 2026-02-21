@@ -2,6 +2,10 @@
 @layout MainLayout
 @inject IStringLocalizer<SharedResources> Loc
 
-<h3>@Loc["NotFoundTitle"]</h3>
-<p>@Loc["NotFoundMessage"]</p>
-<p><a href="/">@Loc["BackToHome"]</a></p>
+<div class="card">
+    <div class="card-body">
+        <h3>@Loc["NotFoundTitle"]</h3>
+        <p>@Loc["NotFoundMessage"]</p>
+        <p class="mb-0"><a href="/">@Loc["BackToHome"]</a></p>
+    </div>
+</div>
