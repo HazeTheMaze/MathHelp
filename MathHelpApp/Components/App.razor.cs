@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -9,6 +9,9 @@ public sealed partial class App
     [Inject]
     public IJSRuntime Js { get; set; } = null!;
 
+    [Inject]
+    public ILogger<App> Logger { get; set; } = null!;
+
     private bool _cultureReady;
 
     protected override async Task OnInitializedAsync()
@@ -18,8 +21,9 @@ public sealed partial class App
         {
             culture = await Js.InvokeAsync<string>("MathHelpCulture.getInitial");
         }
-        catch
+        catch (Exception ex)
         {
+            Logger.LogWarning(ex, "MathHelpCulture.getInitial failed; using default culture 'en'");
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en");
             CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en");
             await Js.InvokeVoidAsync("MathHelpCulture.setLang", "en");

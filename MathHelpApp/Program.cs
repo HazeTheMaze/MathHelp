@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MathHelpApp.Components;
@@ -31,8 +31,11 @@ try
     CultureInfo.DefaultThreadCurrentCulture = ci;
     CultureInfo.DefaultThreadCurrentUICulture = ci;
 }
-catch
+catch (Exception ex)
 {
+    var logger = host.Services.GetRequiredService<Microsoft.Extensions.Logging.ILoggerFactory>()
+        .CreateLogger("MathHelp.Program");
+    logger.LogWarning(ex, "MathHelpCulture.getInitial failed; using default culture 'en'");
     CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en");
     CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en");
 }
