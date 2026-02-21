@@ -90,9 +90,21 @@
                             {
                                 <p class="text-danger small mb-2">@_downloadError</p>
                             }
-                            <button type="button" class="btn btn-primary btn-lg" disabled="@_downloading" @onclick="OnDownloadPdf">
-                                @(_downloading ? Loc["Loading"] : Loc["BtnDownloadPdf"])
-                            </button>
+                            @if (_selectedType == PdfType.Reference)
+                            {
+                                <button type="button" class="btn btn-primary btn-lg" disabled="@_downloading" @onclick="OnDownloadPdf">
+                                    @(_downloading ? Loc["Loading"] : Loc["BtnDownloadPdf"])
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-primary btn-lg me-2" disabled="@_downloading" @onclick="OnDownloadPracticeSheetAsync">
+                                    @(_downloading ? Loc["Loading"] : Loc["BtnDownloadPracticeSheet"])
+                                </button>
+                                <button type="button" class="btn btn-outline-primary btn-lg" disabled="@_downloading" @onclick="OnDownloadAnswerSheetAsync">
+                                    @Loc["BtnDownloadAnswerSheet"]
+                                </button>
+                            }
                         </div>
                     </div>
                 }

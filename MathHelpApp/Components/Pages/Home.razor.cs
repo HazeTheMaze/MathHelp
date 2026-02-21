@@ -90,7 +90,10 @@ public sealed partial class Home
         var newQuery = string.Join(
             '&',
             dict.Select(kv => $"{Uri.EscapeDataString(kv.Key)}={Uri.EscapeDataString(kv.Value)}"));
-        var path = uri.GetLeftPart(UriPartial.Path).TrimEnd('/');
+        var pathPart = uri.GetLeftPart(UriPartial.Path);
+        var path = (pathPart.Length > 1 && pathPart.EndsWith('/'))
+            ? pathPart
+            : pathPart.TrimEnd('/');
         if (string.IsNullOrEmpty(path))
         {
             path = "/";
@@ -109,30 +112,16 @@ public sealed partial class Home
     internal async Task OnDownloadPdf()
     {
         _downloadError = null;
-        var validationError = TableRangeValidation.Validate(_minTable, _maxTable);
-        if (validationError is not null)
+        var validationKey = TableRangeValidation.Validate(_minTable, _maxTable);
+        if (validationKey is not null)
         {
-            _downloadError = validationError;
+            SetValidationError(validationKey);
             return;
         }
         _downloading = true;
         try
         {
-            if (_selectedType == PdfType.Reference)
-            {
-                await PdfService.DownloadTablePdfAsync(_minTable, _maxTable, showAnswers: true);
-            }
-            else
-            {
-                var allSheets = new List<List<MultiplicationProblem>>();
-                for (int i = 0; i < _sheetCount; i++)
-                {
-                    var problems = MathService.GenerateRandomProblems(_minTable, _maxTable, MathConstants.ProblemsPerSheet);
-                    allSheets.Add(problems);
-                }
-                await PdfService.DownloadPracticePdfAsync(allSheets);
-                await PdfService.DownloadPracticeAnswerSheetPdfAsync(allSheets);
-            }
+            await PdfService.DownloadTablePdfAsync(_minTable, _maxTable, showAnswers: true);
         }
         catch (Exception ex)
         {
@@ -143,5 +132,84 @@ public sealed partial class Home
         {
             _downloading = false;
         }
+    }
+
+    internal async Task OnDownloadPracticeSheetAsync()
+    {
+        _downloadError = null;
+        var validationKey = TableRangeValidation.Validate(_minTable, _maxTable);
+        if (validationKey is not null)
+        {
+            SetValidationError(validationKey);
+            return;
+        }
+        _downloading = true;
+        try
+        {
+            var allSheets = BuildPracticeSheets();
+            await PdfService.DownloadPracticePdfAsync(allSheets);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "PDF download failed");
+            _downloadError = Loc["DownloadFailed"].Value;
+        }
+        finally
+        {
+            _downloading = false;
+        }
+    }
+
+    internal async Task OnDownloadAnswerSheetAsync()
+    {
+        _downloadError = null;
+        var validationKey = TableRangeValidation.Validate(_minTable, _maxTable);
+        if (validationKey is not null)
+        {
+            SetValidationError(validationKey);
+            return;
+        }
+        _downloading = true;
+        try
+        {
+            var allSheets = BuildPracticeSheets();
+            await PdfService.DownloadPracticeAnswerSheetPdfAsync(allSheets);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "PDF download failed");
+            _downloadError = Loc["DownloadFailed"].Value;
+        }
+        finally
+        {
+            _downloading = false;
+        }
+    }
+
+    private void SetValidationError(string validationKey)
+    {
+        _downloadError = validationKey switch
+        {
+            "Validation.MinTableRange" => string.Format(
+                Loc["Validation.MinTableRange"].Value,
+                MathConstants.MinTableNumber,
+                MathConstants.MaxTableNumber),
+            "Validation.MaxTableRange" => string.Format(
+                Loc["Validation.MaxTableRange"].Value,
+                MathConstants.MinTableNumber,
+                MathConstants.MaxTableNumber),
+            _ => Loc[validationKey].Value
+        };
+    }
+
+    private List<List<MultiplicationProblem>> BuildPracticeSheets()
+    {
+        var allSheets = new List<List<MultiplicationProblem>>();
+        for (int i = 0; i < _sheetCount; i++)
+        {
+            var problems = MathService.GenerateRandomProblems(_minTable, _maxTable, MathConstants.ProblemsPerSheet);
+            allSheets.Add(problems);
+        }
+        return allSheets;
     }
 }
