@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MathHelpApp.Components;
@@ -25,7 +25,9 @@ try
 {
     var js = host.Services.GetRequiredService<Microsoft.JSInterop.IJSRuntime>();
     var culture = await js.InvokeAsync<string>("MathHelpCulture.getInitial", CancellationToken.None, Array.Empty<object>());
-    var ci = culture is "sv" or "en" ? new CultureInfo(culture) : new CultureInfo("en");
+    var ci = culture is "sv" or "en"
+        ? new CultureInfo(culture)
+        : new CultureInfo("en");
     CultureInfo.DefaultThreadCurrentCulture = ci;
     CultureInfo.DefaultThreadCurrentUICulture = ci;
 }

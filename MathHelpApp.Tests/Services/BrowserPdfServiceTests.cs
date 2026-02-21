@@ -26,7 +26,7 @@ public sealed class BrowserPdfServiceTests
     public async Task DownloadTablePdfAsync_ShouldInvokeJsWithTableTypeAndCorrectPayload()
     {
         SetupLocalizer(_loc);
-        var js = new FakeJSRuntime();
+        var js = new FakeJsRuntime();
         var navigation = new FakeNavigationManager("https://example.com/");
         var sut = new BrowserPdfService(js, navigation, _loc);
 
@@ -48,7 +48,7 @@ public sealed class BrowserPdfServiceTests
     public async Task DownloadTablePdfAsync_WhenMinTableIs1_ShouldSetProblemsPerGroupToMaxTable()
     {
         SetupLocalizer(_loc);
-        var js = new FakeJSRuntime();
+        var js = new FakeJsRuntime();
         var navigation = new FakeNavigationManager("https://app.test/");
         var sut = new BrowserPdfService(js, navigation, _loc);
 
@@ -63,7 +63,7 @@ public sealed class BrowserPdfServiceTests
     public async Task DownloadTablePdfAsync_ShouldBuildProblemsForEachTableAndMultiplier()
     {
         SetupLocalizer(_loc);
-        var js = new FakeJSRuntime();
+        var js = new FakeJsRuntime();
         var navigation = new FakeNavigationManager("https://example.com/");
         var sut = new BrowserPdfService(js, navigation, _loc);
 
@@ -83,7 +83,7 @@ public sealed class BrowserPdfServiceTests
     public async Task DownloadTablePdfAsync_ShouldSetSiteUrlWithoutTrailingSlash()
     {
         SetupLocalizer(_loc);
-        var js = new FakeJSRuntime();
+        var js = new FakeJsRuntime();
         var navigation = new FakeNavigationManager("https://mysite.com/subpath/");
         var sut = new BrowserPdfService(js, navigation, _loc);
 
@@ -98,7 +98,7 @@ public sealed class BrowserPdfServiceTests
     public async Task DownloadTablePdfAsync_WhenBaseUriIsRoot_ShouldSetSiteUrlToAuthorityOnly()
     {
         SetupLocalizer(_loc);
-        var js = new FakeJSRuntime();
+        var js = new FakeJsRuntime();
         var navigation = new FakeNavigationManager("https://root.com/");
         var sut = new BrowserPdfService(js, navigation, _loc);
 
@@ -113,7 +113,7 @@ public sealed class BrowserPdfServiceTests
     public async Task DownloadPracticePdfAsync_ShouldInvokeJsWithPracticeTypeAndSheets()
     {
         SetupLocalizer(_loc);
-        var js = new FakeJSRuntime();
+        var js = new FakeJsRuntime();
         var navigation = new FakeNavigationManager("https://example.com/");
         var sut = new BrowserPdfService(js, navigation, _loc);
         var sheet = new List<MultiplicationProblem> { new(2, 3), new(4, 5) };
@@ -143,7 +143,7 @@ public sealed class BrowserPdfServiceTests
     public async Task DownloadPracticeAnswerSheetPdfAsync_ShouldSetShowAnswersTrue()
     {
         SetupLocalizer(_loc);
-        var js = new FakeJSRuntime();
+        var js = new FakeJsRuntime();
         var navigation = new FakeNavigationManager("https://example.com/");
         var sut = new BrowserPdfService(js, navigation, _loc);
         var allSheets = new List<List<MultiplicationProblem>> { new List<MultiplicationProblem> { new(1, 1) } };

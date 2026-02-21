@@ -6,7 +6,7 @@ namespace MathHelpApp.Tests.Fakes;
 /// Test double for IJSRuntime that captures the last JSON argument passed to InvokeAsync
 /// (used when code calls the InvokeVoidAsync extension, which forwards to InvokeAsync).
 /// </summary>
-public sealed class FakeJSRuntime : IJSRuntime
+public sealed class FakeJsRuntime : IJSRuntime
 {
     public string? LastInvokeJson { get; private set; }
 

@@ -1,5 +1,3 @@
-namespace MathHelpApp.Components.Layout;
+﻿namespace MathHelpApp.Components.Layout;
 
-public sealed partial class NavMenu
-{
-}
+public sealed partial class NavMenu;
