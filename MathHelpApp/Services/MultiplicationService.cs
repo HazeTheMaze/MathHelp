@@ -3,7 +3,7 @@ using MathHelpApp.Models;
 
 namespace MathHelpApp.Services;
 
-public sealed class MultiplicationService : IMultiplicationService
+internal sealed class MultiplicationService : IMultiplicationService
 {
     private readonly Random _random = new();
 

@@ -5,10 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base id="baseTag" href="/" />
+    <!-- Base href must be set at runtime for GitHub Pages subpath. -->
     <script>
         (function () {
             var path = window.location.pathname;
-            var base = path.endsWith('/') ? path : path.substring(0, path.lastIndexOf('/') + 1);
+            var base = path.endsWith('/') ? path : path + '/';
             if (!base) base = '/';
             var el = document.getElementById('baseTag');
             if (el) el.href = base;
@@ -20,6 +21,7 @@
     <link rel="stylesheet" href="app.css" />
     <link rel="icon" type="image/png" href="app_icon.png" />
     <title>Mattehjälpen</title>
+    <!-- Script order intentional: culture and PDF scripts must load before Blazor. -->
     <script src="https://cdn.jsdelivr.net/npm/jspdf@4.2.0/dist/jspdf.umd.min.js" crossorigin="anonymous" integrity="sha384-QgylrxI5Yl5GgBcwJUoY+eXWrJ8Hdd2yCLHPCD/q90kMXcaRulJnwQ0U94saGFR1" defer></script>
     <script src="js/pdf.js" defer></script>
     <script src="js/culture.js" defer></script>

@@ -2,6 +2,9 @@ using MathHelpApp.Models;
 
 namespace MathHelpApp.Services;
 
+/// <summary>
+/// Generates multiplication table and random practice problems.
+/// </summary>
 public interface IMultiplicationService
 {
     /// <summary>
@@ -14,5 +17,9 @@ public interface IMultiplicationService
     /// <summary>
     /// Generates random multiplication problems within the specified table range.
     /// </summary>
+    /// <param name="minTable">Minimum table number (inclusive).</param>
+    /// <param name="maxTable">Maximum table number (inclusive).</param>
+    /// <param name="count">Number of problems to generate.</param>
+    /// <returns>A list of random multiplication problems.</returns>
     List<MultiplicationProblem> GenerateRandomProblems(int minTable, int maxTable, int count);
 }

@@ -8,7 +8,7 @@ using Microsoft.JSInterop;
 
 namespace MathHelpApp.Services;
 
-public sealed class BrowserPdfService : IBrowserPdfService
+internal sealed class BrowserPdfService : IBrowserPdfService
 {
     private readonly IJSRuntime _js;
     private readonly NavigationManager _navigation;

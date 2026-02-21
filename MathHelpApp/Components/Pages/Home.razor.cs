@@ -8,22 +8,30 @@ using Microsoft.Extensions.Localization;
 
 namespace MathHelpApp.Components.Pages;
 
+/// <summary>
+/// Home page: reference or practice sheet selection and PDF download.
+/// </summary>
 public sealed partial class Home
 {
     private enum PdfType { Reference, Practice }
 
+    /// <summary>Localized strings for the page.</summary>
     [Inject]
     public IStringLocalizer<SharedResources> Loc { get; set; } = null!;
 
+    /// <summary>Used to trigger PDF generation and download in the browser.</summary>
     [Inject]
     public IBrowserPdfService PdfService { get; set; } = null!;
 
+    /// <summary>Used to generate practice problems.</summary>
     [Inject]
     public IMultiplicationService MathService { get; set; } = null!;
 
+    /// <summary>Used for URL/tab sync and navigation.</summary>
     [Inject]
     public NavigationManager Navigation { get; set; } = null!;
 
+    /// <summary>Used to log download failures.</summary>
     [Inject]
     public ILogger<Home> Logger { get; set; } = null!;
 
@@ -35,6 +43,7 @@ public sealed partial class Home
     private bool _downloading;
     private string? _downloadError;
 
+    /// <inheritdoc />
     protected override void OnInitialized() => InitializeTabFromQuery();
 
     internal void InitializeTabFromQuery()

@@ -3,7 +3,7 @@ namespace MathHelpApp.Constants;
 /// <summary>
 /// Constants used throughout the application for multiplication practice.
 /// </summary>
-public static class MathConstants
+internal static class MathConstants
 {
     /// <summary>
     /// Minimum allowed multiplication table (1).

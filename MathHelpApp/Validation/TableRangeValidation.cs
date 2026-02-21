@@ -5,15 +5,13 @@ namespace MathHelpApp.Validation;
 /// <summary>
 /// Validates table range parameters (min/max) for PDF and practice.
 /// </summary>
-public static class TableRangeValidation
+internal static class TableRangeValidation
 {
     /// <summary>
     /// Validates that minTable and maxTable are within 1..12 and minTable &lt;= maxTable.
-    /// </summary>
-    /// <returns>Null if valid; otherwise an error message.</returns>
-    /// <summary>
     /// Returns a resource key for the UI to localize (e.g. Validation.MinTableRange), or null if valid.
     /// </summary>
+    /// <returns>Null if valid; otherwise a resource key for the validation message.</returns>
     public static string? Validate(int minTable, int maxTable)
     {
         if (minTable < MathConstants.MinTableNumber || minTable > MathConstants.MaxTableNumber)
