@@ -1,5 +1,6 @@
 @inject NavigationManager Navigation
 @inject IJSRuntime JS
+@inject IStringLocalizer<SharedResources> Loc
 
 @{
     var currentCulture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
@@ -8,7 +9,7 @@
 <div class="culture-selector">
     <button type="button"
             class="culture-trigger"
-            aria-label="@(currentCulture == "sv" ? "Svenska" : "English")"
+            aria-label="@(currentCulture == "sv" ? Loc["LanguageSv"] : Loc["LanguageEn"])"
             aria-expanded="@_isOpen"
             aria-has-popup="true"
             @onclick="Toggle">
@@ -24,13 +25,13 @@
                 <span class="culture-flag culture-flag-svg" aria-hidden="true">
                     <img src="images/flags/Flag_of_Sweden.svg" alt="" loading="lazy" />
                 </span>
-                <span>Svenska</span>
+                <span>@Loc["LanguageSv"]</span>
             </button>
             <button type="button" class="culture-option" role="menuitem" @onclick='() => SetCulture("en")'>
                 <span class="culture-flag culture-flag-svg" aria-hidden="true">
                     <img src="images/flags/Flag_of_Europe.svg" alt="" loading="lazy" />
                 </span>
-                <span>English</span>
+                <span>@Loc["LanguageEn"]</span>
             </button>
         </div>
     }

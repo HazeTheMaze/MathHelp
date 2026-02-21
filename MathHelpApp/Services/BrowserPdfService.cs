@@ -1,4 +1,5 @@
 using System.Text.Json;
+using MathHelpApp.Constants;
 using MathHelpApp.Models;
 using MathHelpApp.Resources;
 using Microsoft.AspNetCore.Components;
@@ -29,7 +30,7 @@ public sealed class BrowserPdfService : IBrowserPdfService
 
     public async Task DownloadTablePdfAsync(int minTable, int maxTable, bool showAnswers)
     {
-        int problemsPerGroup = minTable == 1 ? maxTable : 5;
+        int problemsPerGroup = minTable == 1 ? maxTable : MathConstants.ReferenceProblemsPerGroupPartialRange;
 
         var problems = new List<object>();
         for (int t = minTable; t <= maxTable; t++)
