@@ -64,7 +64,9 @@
                     textField.fieldName = 'ans_' + String(globalIndex);
                     textField.Rect = [xLineStart, y - 3.5, Math.min(ANSWER_LINE_LENGTH, groupX + groupW - 2 - xLineStart), 4.5];
                     doc.addField(textField);
-                } catch (e) { }
+                } catch (e) { 
+                    console.warn('PDF form field creation failed', e);
+                }
             }
         }
     }

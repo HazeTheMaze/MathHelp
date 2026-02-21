@@ -50,53 +50,42 @@ public sealed partial class Home
         }
     }
 
-    private string? GetQueryParam(string name)
+    private static Dictionary<string, string> ParseQueryString(string query)
     {
-        var uri = new Uri(Navigation.Uri);
-        var query = uri.Query;
+        var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         if (string.IsNullOrEmpty(query) || query.Length < 2)
         {
-            return null;
+            return dict;
         }
 
         foreach (var pair in query[1..].Split('&'))
         {
             var eq = pair.IndexOf('=', StringComparison.Ordinal);
-            if (eq > 0
-                && string.Equals(
-                    Uri.UnescapeDataString(pair[..eq].Trim()),
-                    name,
-                    StringComparison.OrdinalIgnoreCase))
+            if (eq > 0)
             {
-                return eq < pair.Length - 1 ? Uri.UnescapeDataString(pair[(eq + 1)..].Trim()) : "";
+                dict[Uri.UnescapeDataString(pair[..eq].Trim())] =
+                    eq < pair.Length - 1 ? Uri.UnescapeDataString(pair[(eq + 1)..].Trim()) : "";
+            }
+            else if (!string.IsNullOrWhiteSpace(pair))
+            {
+                dict[Uri.UnescapeDataString(pair.Trim())] = "";
             }
         }
 
-        return null;
+        return dict;
+    }
+
+    private string? GetQueryParam(string name)
+    {
+        var uri = new Uri(Navigation.Uri);
+        var dict = ParseQueryString(uri.Query);
+        return dict.TryGetValue(name, out var value) ? value : null;
     }
 
     private void SetQueryParam(string name, string value)
     {
         var uri = new Uri(Navigation.Uri);
-        var query = uri.Query;
-        var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        if (!string.IsNullOrEmpty(query) && query.Length > 1)
-        {
-            foreach (var pair in query[1..].Split('&'))
-            {
-                var eq = pair.IndexOf('=', StringComparison.Ordinal);
-                if (eq > 0)
-                {
-                    dict[Uri.UnescapeDataString(pair[..eq].Trim())] =
-                        eq < pair.Length - 1 ? Uri.UnescapeDataString(pair[(eq + 1)..].Trim()) : "";
-                }
-                else if (!string.IsNullOrWhiteSpace(pair))
-                {
-                    dict[Uri.UnescapeDataString(pair.Trim())] = "";
-                }
-            }
-        }
-
+        var dict = ParseQueryString(uri.Query);
         dict[name] = value;
         var newQuery = string.Join(
             '&',
