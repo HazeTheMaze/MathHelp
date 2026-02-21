@@ -5,9 +5,7 @@ using MathHelpApp.Components;
 using MathHelpApp.Resources;
 using MathHelpApp.Services;
 
-// Default to English so resource lookup finds SharedResources.en.resx (avoids showing keys).
-CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en");
-CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en");
+// Do not set culture here: Blazor WASM can lock resource loading to the initial culture, so setting "en" here causes Swedish (set later in App.razor) to still show English. Culture is set in App.razor from MathHelpCulture.getInitial() before any localized content renders.
 
 // Load both en and sv satellite assemblies so Swedish works after culture switch (Blazor WASM only loads satellites for the initial culture otherwise).
 var mainAssembly = typeof(SharedResources).Assembly;
@@ -26,4 +24,20 @@ builder.Services.AddLocalization();
 builder.Services.AddScoped<IMultiplicationService, MultiplicationService>();
 builder.Services.AddScoped<IBrowserPdfService, BrowserPdfService>();
 
-await builder.Build().RunAsync();
+var host = builder.Build();
+// Set culture before RunAsync() so Blazor WASM resource loading uses the correct culture (setting it in App.razor is too late).
+try
+{
+    var js = host.Services.GetRequiredService<Microsoft.JSInterop.IJSRuntime>();
+    var culture = await js.InvokeAsync<string>("MathHelpCulture.getInitial", CancellationToken.None, Array.Empty<object>());
+    var ci = culture is "sv" or "en" ? new CultureInfo(culture) : new CultureInfo("en");
+    CultureInfo.DefaultThreadCurrentCulture = ci;
+    CultureInfo.DefaultThreadCurrentUICulture = ci;
+}
+catch
+{
+    CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en");
+    CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en");
+}
+
+await host.RunAsync();
