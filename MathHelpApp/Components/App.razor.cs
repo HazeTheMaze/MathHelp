@@ -1,41 +1,14 @@
-using System.Globalization;
-using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
-
 namespace MathHelpApp.Components;
 
+/// <summary>
+/// Culture is set once at startup in Program.cs (getInitial + setLang). This component only gates rendering until ready.
+/// </summary>
 public sealed partial class App
 {
-    [Inject]
-    public IJSRuntime Js { get; set; } = null!;
-
-    [Inject]
-    public ILogger<App> Logger { get; set; } = null!;
-
     private bool _cultureReady;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        string? culture;
-        try
-        {
-            culture = await Js.InvokeAsync<string>("MathHelpCulture.getInitial");
-        }
-        catch (Exception ex)
-        {
-            Logger.LogWarning(ex, "MathHelpCulture.getInitial failed; using default culture 'en'");
-            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en");
-            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en");
-            await Js.InvokeVoidAsync("MathHelpCulture.setLang", "en");
-            _cultureReady = true;
-            return;
-        }
-        var ci = culture is "sv" or "en"
-            ? new CultureInfo(culture)
-            : new CultureInfo("en");
-        CultureInfo.DefaultThreadCurrentCulture = ci;
-        CultureInfo.DefaultThreadCurrentUICulture = ci;
-        await Js.InvokeVoidAsync("MathHelpCulture.setLang", ci.TwoLetterISOLanguageName);
         _cultureReady = true;
     }
 }

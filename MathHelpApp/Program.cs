@@ -1,13 +1,29 @@
 using System.Globalization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.JSInterop;
 using MathHelpApp.Components;
 using MathHelpApp.Resources;
 using MathHelpApp.Services;
 
+// Preload satellite assemblies if present; ignore if not (e.g. single culture deployment).
 var mainAssembly = typeof(SharedResources).Assembly;
-try { mainAssembly.GetSatelliteAssembly(new CultureInfo("en")); } catch { }
-try { mainAssembly.GetSatelliteAssembly(new CultureInfo("sv")); } catch { }
+try
+{
+    mainAssembly.GetSatelliteAssembly(new CultureInfo("en"));
+}
+catch (Exception ex)
+{
+    System.Diagnostics.Debug.WriteLine($"Satellite assembly preload skipped: {ex.Message}");
+}
+try
+{
+    mainAssembly.GetSatelliteAssembly(new CultureInfo("sv"));
+}
+catch (Exception ex)
+{
+    System.Diagnostics.Debug.WriteLine($"Satellite assembly preload skipped: {ex.Message}");
+}
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -20,16 +36,17 @@ builder.Services.AddScoped<IMultiplicationService, MultiplicationService>();
 builder.Services.AddScoped<IBrowserPdfService, BrowserPdfService>();
 
 var host = builder.Build();
+var js = host.Services.GetRequiredService<IJSRuntime>();
 
 try
 {
-    var js = host.Services.GetRequiredService<Microsoft.JSInterop.IJSRuntime>();
     var culture = await js.InvokeAsync<string>("MathHelpCulture.getInitial", CancellationToken.None, Array.Empty<object>());
     var ci = culture is "sv" or "en"
         ? new CultureInfo(culture)
         : new CultureInfo("en");
     CultureInfo.DefaultThreadCurrentCulture = ci;
     CultureInfo.DefaultThreadCurrentUICulture = ci;
+    await js.InvokeVoidAsync("MathHelpCulture.setLang", CancellationToken.None, ci.TwoLetterISOLanguageName);
 }
 catch (Exception ex)
 {
@@ -38,6 +55,7 @@ catch (Exception ex)
     logger.LogWarning(ex, "MathHelpCulture.getInitial failed; using default culture 'en'");
     CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en");
     CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en");
+    await js.InvokeVoidAsync("MathHelpCulture.setLang", CancellationToken.None, "en");
 }
 
 await host.RunAsync();

@@ -1,7 +1,7 @@
 namespace MathHelpApp.Components.Layout;
 
 /// <summary>
-/// Culture is set from JS (MathHelpCulture.getInitial) in Program.cs and App.razor.cs.
+/// Culture is set once at startup in Program.cs (MathHelpCulture.getInitial + setLang).
 /// </summary>
 public sealed partial class MainLayout
 {
