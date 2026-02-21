@@ -88,9 +88,6 @@
   <data name="BtnDownloadPracticeSheets" xml:space="preserve">
     <value>Ladda ner övningsblad + facit</value>
   </data>
-  <data name="BtnDownloadPracticeSheet" xml:space="preserve">
-    <value>Ladda ner övningsblad</value>
-  </data>
   <data name="BtnDownloadAnswerSheet" xml:space="preserve">
     <value>Ladda ner facit</value>
   </data>

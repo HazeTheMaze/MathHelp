@@ -88,9 +88,6 @@
   <data name="BtnDownloadPracticeSheets" xml:space="preserve">
     <value>Download practice sheets + answer key</value>
   </data>
-  <data name="BtnDownloadPracticeSheet" xml:space="preserve">
-    <value>Download practice sheet</value>
-  </data>
   <data name="BtnDownloadAnswerSheet" xml:space="preserve">
     <value>Download answer key</value>
   </data>
