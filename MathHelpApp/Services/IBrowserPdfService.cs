@@ -16,4 +16,9 @@ public interface IBrowserPdfService
     /// Generates and downloads practice sheet PDF(s) with the given problem sets.
     /// </summary>
     Task DownloadPracticePdfAsync(List<List<MultiplicationProblem>> allSheets);
+
+    /// <summary>
+    /// Generates and downloads the answer sheet for the given practice sheets (same layout, answers shown).
+    /// </summary>
+    Task DownloadPracticeAnswerSheetPdfAsync(List<List<MultiplicationProblem>> allSheets);
 }

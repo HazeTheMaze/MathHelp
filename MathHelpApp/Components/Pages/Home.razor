@@ -132,6 +132,7 @@
                     allSheets.Add(problems);
                 }
                 await PdfService.DownloadPracticePdfAsync(allSheets);
+                await PdfService.DownloadPracticeAnswerSheetPdfAsync(allSheets);
             }
         }
         finally
