@@ -64,6 +64,14 @@ public sealed class MultiplicationServiceTests
     }
 
     [Test]
+    public void GenerateRandomProblems_WithCountZero_ShouldReturnEmptyList()
+    {
+        var problems = _service.GenerateRandomProblems(1, 12, 0);
+
+        problems.ShouldBeEmpty();
+    }
+
+    [Test]
     public void GenerateRandomProblems_ShouldGenerateProblemsWithinTableRange()
     {
         const int minTable = 3;
