@@ -1,7 +1,8 @@
 using System.Text.Json;
-using MathHelpApp.Constants;
 using MathHelpApp.Models;
+using MathHelpApp.Resources;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 
 namespace MathHelpApp.Services;
@@ -10,11 +11,13 @@ public sealed class BrowserPdfService : IBrowserPdfService
 {
     private readonly IJSRuntime _js;
     private readonly NavigationManager _navigation;
+    private readonly IStringLocalizer<SharedResources> _loc;
 
-    public BrowserPdfService(IJSRuntime js, NavigationManager navigation)
+    public BrowserPdfService(IJSRuntime js, NavigationManager navigation, IStringLocalizer<SharedResources> loc)
     {
         _js = js;
         _navigation = navigation;
+        _loc = loc;
     }
 
     private static string GetSiteUrl(NavigationManager navigation)
@@ -26,10 +29,12 @@ public sealed class BrowserPdfService : IBrowserPdfService
 
     public async Task DownloadTablePdfAsync(int minTable, int maxTable, bool showAnswers)
     {
+        int problemsPerGroup = minTable == 1 ? maxTable : 5;
+
         var problems = new List<object>();
         for (int t = minTable; t <= maxTable; t++)
         {
-            for (int i = MathConstants.MinTableNumber; i <= MathConstants.MaxTableNumber; i++)
+            for (int i = 1; i <= problemsPerGroup; i++)
             {
                 problems.Add(new { a = t, b = i, ans = t * i });
             }
@@ -41,7 +46,10 @@ public sealed class BrowserPdfService : IBrowserPdfService
             minTable,
             maxTable,
             showAnswers,
+            problemsPerGroup,
             problems,
+            pdfTitleMultiplicationTables = _loc["PdfTitleMultiplicationTables"].Value,
+            pdfTitlePageSuffix = _loc["PdfTitlePageSuffix"].Value,
             siteName = "MathHelp",
             siteUrl = GetSiteUrl(_navigation)
         };
@@ -59,6 +67,9 @@ public sealed class BrowserPdfService : IBrowserPdfService
         {
             type = "practice",
             sheets,
+            pdfPracticeSheet = _loc["PdfPracticeSheet"].Value,
+            pdfAnswerSheet = _loc["PdfAnswerSheet"].Value,
+            pdfSheetNumberSuffix = _loc["PdfSheetNumberSuffix"].Value,
             siteName = "MathHelp",
             siteUrl = GetSiteUrl(_navigation)
         };
@@ -77,6 +88,9 @@ public sealed class BrowserPdfService : IBrowserPdfService
             type = "practice",
             sheets,
             showAnswers = true,
+            pdfPracticeSheet = _loc["PdfPracticeSheet"].Value,
+            pdfAnswerSheet = _loc["PdfAnswerSheet"].Value,
+            pdfSheetNumberSuffix = _loc["PdfSheetNumberSuffix"].Value,
             siteName = "MathHelp",
             siteUrl = GetSiteUrl(_navigation)
         };
