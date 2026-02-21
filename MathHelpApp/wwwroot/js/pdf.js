@@ -169,19 +169,35 @@
         var doc = new lib.jsPDF();
         var site = getSiteOpts(opts);
         var sheets = opts.sheets || [];
-        var showAnswers = opts.showAnswers === true;
+        var interleaved = opts.interleaved === true;
         var practiceLabel = opts.pdfPracticeSheet || 'Practice sheet';
         var answerLabel = opts.pdfAnswerSheet || 'Answer sheet';
         var sheetNumberSuffix = opts.pdfSheetNumberSuffix !== undefined ? opts.pdfSheetNumberSuffix : ' {0}';
-        for (var s = 0; s < sheets.length; s++) {
-            if (s > 0) doc.addPage();
-            var problems = sheets[s];
-            var title = (showAnswers ? answerLabel : practiceLabel) + (sheets.length > 1 ? sheetNumberSuffix.replace('{0}', s + 1) : '');
-            renderPageOfGroups(doc, lib, problems, title, showAnswers, s * PROBLEMS_PER_PAGE, !showAnswers, site.siteName, site.siteUrl, PROBLEMS_PER_GROUP);
+        if (interleaved) {
+            for (var s = 0; s < sheets.length; s++) {
+                if (s > 0) doc.addPage();
+                var problems = sheets[s];
+                var challengeTitle = practiceLabel + (sheets.length > 1 ? sheetNumberSuffix.replace('{0}', s + 1) : '');
+                renderPageOfGroups(doc, lib, problems, challengeTitle, false, s * PROBLEMS_PER_PAGE, true, site.siteName, site.siteUrl, PROBLEMS_PER_GROUP);
+            }
+            for (var s = 0; s < sheets.length; s++) {
+                doc.addPage();
+                var problems = sheets[s];
+                var answerTitle = answerLabel + (sheets.length > 1 ? sheetNumberSuffix.replace('{0}', s + 1) : '');
+                renderPageOfGroups(doc, lib, problems, answerTitle, true, s * PROBLEMS_PER_PAGE, false, site.siteName, site.siteUrl, PROBLEMS_PER_GROUP);
+            }
+        } else {
+            var showAnswers = opts.showAnswers === true;
+            for (var s = 0; s < sheets.length; s++) {
+                if (s > 0) doc.addPage();
+                var problems = sheets[s];
+                var title = (showAnswers ? answerLabel : practiceLabel) + (sheets.length > 1 ? sheetNumberSuffix.replace('{0}', s + 1) : '');
+                renderPageOfGroups(doc, lib, problems, title, showAnswers, s * PROBLEMS_PER_PAGE, !showAnswers, site.siteName, site.siteUrl, PROBLEMS_PER_GROUP);
+            }
         }
         var name = sheets.length > 1
-            ? (showAnswers ? 'practice-sheets-' + sheets.length + '-answers.pdf' : 'practice-sheets-' + sheets.length + '.pdf')
-            : (showAnswers ? 'practice-sheet-answers.pdf' : 'practice-sheet.pdf');
+            ? (interleaved ? 'practice-sheets-' + sheets.length + '.pdf' : (opts.showAnswers ? 'practice-sheets-' + sheets.length + '-answers.pdf' : 'practice-sheets-' + sheets.length + '.pdf'))
+            : (interleaved ? 'practice-sheet.pdf' : (opts.showAnswers ? 'practice-sheet-answers.pdf' : 'practice-sheet.pdf'));
         doc.save(name);
     }
 

@@ -13,12 +13,7 @@ public interface IBrowserPdfService
     Task DownloadTablePdfAsync(int minTable, int maxTable, bool showAnswers);
 
     /// <summary>
-    /// Generates and downloads practice sheet PDF(s) with the given problem sets.
+    /// Generates and downloads a single practice PDF with interleaved challenge and answer pages (1 challenge, 1 answer, 2 challenge, 2 answer, ...).
     /// </summary>
     Task DownloadPracticePdfAsync(List<List<MultiplicationProblem>> allSheets);
-
-    /// <summary>
-    /// Generates and downloads the answer sheet for the given practice sheets (same layout, answers shown).
-    /// </summary>
-    Task DownloadPracticeAnswerSheetPdfAsync(List<List<MultiplicationProblem>> allSheets);
 }

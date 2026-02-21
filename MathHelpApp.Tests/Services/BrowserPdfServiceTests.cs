@@ -125,7 +125,7 @@ public sealed class BrowserPdfServiceTests
         using var doc = JsonDocument.Parse(js.LastInvokeJson!);
         var root = doc.RootElement;
         root.GetProperty("type").GetString().ShouldBe("practice");
-        root.TryGetProperty("showAnswers", out _).ShouldBeFalse();
+        root.GetProperty("interleaved").GetBoolean().ShouldBeTrue();
         var sheets = root.GetProperty("sheets");
         sheets.GetArrayLength().ShouldBe(1);
         var firstSheet = sheets[0];
@@ -139,20 +139,4 @@ public sealed class BrowserPdfServiceTests
         root.GetProperty("siteUrl").GetString().ShouldBe("https://example.com");
     }
 
-    [Test]
-    public async Task DownloadPracticeAnswerSheetPdfAsync_ShouldSetShowAnswersTrue()
-    {
-        SetupLocalizer(_loc);
-        var js = new FakeJsRuntime();
-        var navigation = new FakeNavigationManager("https://example.com/");
-        var sut = new BrowserPdfService(js, navigation, _loc);
-        var allSheets = new List<List<MultiplicationProblem>> { new List<MultiplicationProblem> { new(1, 1) } };
-
-        await sut.DownloadPracticeAnswerSheetPdfAsync(allSheets);
-
-        js.LastInvokeJson.ShouldNotBeNull();
-        using var doc = JsonDocument.Parse(js.LastInvokeJson!);
-        doc.RootElement.GetProperty("type").GetString().ShouldBe("practice");
-        doc.RootElement.GetProperty("showAnswers").GetBoolean().ShouldBe(true);
-    }
 }

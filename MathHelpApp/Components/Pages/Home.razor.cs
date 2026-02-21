@@ -160,32 +160,6 @@ public sealed partial class Home
         }
     }
 
-    internal async Task OnDownloadAnswerSheetAsync()
-    {
-        _downloadError = null;
-        var validationKey = TableRangeValidation.Validate(_minTable, _maxTable);
-        if (validationKey is not null)
-        {
-            SetValidationError(validationKey);
-            return;
-        }
-        _downloading = true;
-        try
-        {
-            var allSheets = BuildPracticeSheets();
-            await PdfService.DownloadPracticeAnswerSheetPdfAsync(allSheets);
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex, "PDF download failed");
-            _downloadError = Loc["DownloadFailed"].Value;
-        }
-        finally
-        {
-            _downloading = false;
-        }
-    }
-
     private void SetValidationError(string validationKey)
     {
         _downloadError = validationKey switch

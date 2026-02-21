@@ -68,27 +68,7 @@ public sealed class BrowserPdfService : IBrowserPdfService
         {
             type = "practice",
             sheets,
-            pdfPracticeSheet = _loc["PdfPracticeSheet"].Value,
-            pdfAnswerSheet = _loc["PdfAnswerSheet"].Value,
-            pdfSheetNumberSuffix = _loc["PdfSheetNumberSuffix"].Value,
-            siteName = "MathHelp",
-            siteUrl = GetSiteUrl(_navigation)
-        };
-
-        await _js.InvokeVoidAsync("MathHelpPdf.download", JsonSerializer.Serialize(options));
-    }
-
-    public async Task DownloadPracticeAnswerSheetPdfAsync(List<List<MultiplicationProblem>> allSheets)
-    {
-        var sheets = allSheets.Select(sheet =>
-            sheet.Select(p => new { a = p.Multiplicand, b = p.Multiplier, ans = p.Answer }).ToList()
-        ).ToList();
-
-        var options = new
-        {
-            type = "practice",
-            sheets,
-            showAnswers = true,
+            interleaved = true,
             pdfPracticeSheet = _loc["PdfPracticeSheet"].Value,
             pdfAnswerSheet = _loc["PdfAnswerSheet"].Value,
             pdfSheetNumberSuffix = _loc["PdfSheetNumberSuffix"].Value,
