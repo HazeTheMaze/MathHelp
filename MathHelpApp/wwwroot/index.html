@@ -4,17 +4,22 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- For GitHub Pages at username.github.io/MathHelp/ use: <base href="/MathHelp/" /> -->
-    <base href="/" />
+    <script>
+        (function () {
+            var path = window.location.pathname;
+            var base = path.endsWith('/') ? path : path.substring(0, path.lastIndexOf('/') + 1);
+            if (!base) base = '/';
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="app.css" />
     <link rel="icon" type="image/png" href="app_icon.png" />
     <title>Mattehjälpen</title>
-    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" crossorigin="anonymous"></script>
-    <script src="js/pdf.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" crossorigin="anonymous" defer></script>
+    <script src="js/pdf.js" defer></script>
     <script src="js/culture.js"></script>
     <script>
         (function () {
