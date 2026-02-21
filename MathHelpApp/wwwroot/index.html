@@ -23,19 +23,6 @@
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" crossorigin="anonymous" defer></script>
     <script src="js/pdf.js" defer></script>
     <script src="js/culture.js" defer></script>
-    <script defer>
-        (function () {
-            var stored = window.MathHelpCulture && window.MathHelpCulture.get ? window.MathHelpCulture.get() : '';
-            if (stored === 'sv' || stored === 'en') {
-                var qs = new URLSearchParams(window.location.search);
-                if (qs.get('culture') !== stored) {
-                    qs.set('culture', stored);
-                    var url = window.location.pathname + '?' + qs.toString() + window.location.hash;
-                    window.location.replace(url);
-                }
-            }
-        })();
-    </script>
 </head>
 
 <body>

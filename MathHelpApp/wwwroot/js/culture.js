@@ -19,3 +19,16 @@ window.MathHelpCulture = {
         }
     }
 };
+
+// Sync URL with stored culture so ?culture= is present when user had a preference (runs after this script has loaded).
+(function () {
+    var stored = window.MathHelpCulture.get();
+    if (stored === 'sv' || stored === 'en') {
+        var qs = new URLSearchParams(window.location.search);
+        if (qs.get('culture') !== stored) {
+            qs.set('culture', stored);
+            var url = window.location.pathname + '?' + qs.toString() + window.location.hash;
+            window.location.replace(url);
+        }
+    }
+})();
