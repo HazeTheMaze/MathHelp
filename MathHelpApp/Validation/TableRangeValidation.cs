@@ -11,21 +11,24 @@ public static class TableRangeValidation
     /// Validates that minTable and maxTable are within 1..12 and minTable &lt;= maxTable.
     /// </summary>
     /// <returns>Null if valid; otherwise an error message.</returns>
+    /// <summary>
+    /// Returns a resource key for the UI to localize (e.g. Validation.MinTableRange), or null if valid.
+    /// </summary>
     public static string? Validate(int minTable, int maxTable)
     {
         if (minTable < MathConstants.MinTableNumber || minTable > MathConstants.MaxTableNumber)
         {
-            return $"minTable must be between {MathConstants.MinTableNumber} and {MathConstants.MaxTableNumber}.";
+            return "Validation.MinTableRange";
         }
 
         if (maxTable < MathConstants.MinTableNumber || maxTable > MathConstants.MaxTableNumber)
         {
-            return $"maxTable must be between {MathConstants.MinTableNumber} and {MathConstants.MaxTableNumber}.";
+            return "Validation.MaxTableRange";
         }
 
         if (minTable > maxTable)
         {
-            return "minTable must be less than or equal to maxTable.";
+            return "Validation.MinGreaterThanMax";
         }
 
         return null;

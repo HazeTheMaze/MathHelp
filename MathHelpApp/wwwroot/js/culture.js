@@ -3,7 +3,11 @@ window.MathHelpCulture = {
         return localStorage.getItem('mathhelp-culture') || '';
     },
     set: function (culture) {
-        localStorage.setItem('mathhelp-culture', culture);
+        if (culture === 'sv' || culture === 'en') {
+            localStorage.setItem('mathhelp-culture', culture);
+        } else {
+            localStorage.removeItem('mathhelp-culture');
+        }
     },
     getInitial: function () {
         var qs = new URLSearchParams(window.location.search);
