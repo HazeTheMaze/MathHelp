@@ -289,4 +289,31 @@
   <data name="PdfSheetNumberSuffix" xml:space="preserve">
     <value> {0}</value>
   </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Nedladdningen misslyckades. Försök igen.</value>
+  </data>
+  <data name="LanguageSv" xml:space="preserve">
+    <value>Svenska</value>
+  </data>
+  <data name="LanguageEn" xml:space="preserve">
+    <value>Engelska</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Fel.</value>
+  </data>
+  <data name="ErrorMessage" xml:space="preserve">
+    <value>Ett fel uppstod när din begäran behandlades.</value>
+  </data>
+  <data name="ErrorRequestId" xml:space="preserve">
+    <value>Begäran-ID:</value>
+  </data>
+  <data name="ErrorDevelopmentModeTitle" xml:space="preserve">
+    <value>Utvecklarläge</value>
+  </data>
+  <data name="ErrorDevelopmentModeParagraph1" xml:space="preserve">
+    <value>Byta till utvecklingsmiljö visar mer detaljerad information om felet som uppstod.</value>
+  </data>
+  <data name="ErrorDevelopmentModeParagraph2" xml:space="preserve">
+    <value>Utvecklingsmiljön ska inte vara aktiverad i distribuerade program. Den kan visa känslig information från undantag för slutanvändare. För felsökning, aktivera utvecklingsmiljön genom att sätta miljövariabeln ASPNETCORE_ENVIRONMENT till Development och starta om appen.</value>
+  </data>
 </root>
