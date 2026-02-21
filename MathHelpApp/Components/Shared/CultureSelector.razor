@@ -7,7 +7,7 @@
             class="culture-trigger"
             aria-label="@(currentCulture == "sv" ? Loc["LanguageSv"] : Loc["LanguageEn"])"
             aria-expanded="@_isOpen"
-            aria-has-popup="true"
+            aria-haspopup="menu"
             @onclick="Toggle">
         <span class="culture-flag culture-flag-svg" aria-hidden="true">
             <img src="@(currentCulture == "sv" ? "images/flags/Flag_of_Sweden.svg" : "images/flags/Flag_of_Europe.svg")" alt="" loading="lazy" />

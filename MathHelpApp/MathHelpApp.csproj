@@ -10,8 +10,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
     <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
-    <!-- Keep satellite assemblies for en and sv so Swedish localization is included in publish -->
-    <SatelliteResourceLanguages>en;sv</SatelliteResourceLanguages>
+    <!-- Neutral .resx is English fallback; only sv satellite for Swedish -->
+    <SatelliteResourceLanguages>sv</SatelliteResourceLanguages>
   </PropertyGroup>
 
   <ItemGroup>

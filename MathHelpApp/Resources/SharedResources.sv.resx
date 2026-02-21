@@ -88,6 +88,12 @@
   <data name="BtnDownloadPracticeSheets" xml:space="preserve">
     <value>Ladda ner övningsblad + facit</value>
   </data>
+  <data name="BtnDownloadPracticeSheet" xml:space="preserve">
+    <value>Ladda ner övningsblad</value>
+  </data>
+  <data name="BtnDownloadAnswerSheet" xml:space="preserve">
+    <value>Ladda ner facit</value>
+  </data>
   <data name="BtnDownloadPdf" xml:space="preserve">
     <value>Ladda ner PDF</value>
   </data>
@@ -291,6 +297,15 @@
   </data>
   <data name="DownloadFailed" xml:space="preserve">
     <value>Nedladdningen misslyckades. Försök igen.</value>
+  </data>
+  <data name="Validation.MinTableRange" xml:space="preserve">
+    <value>minTable måste vara mellan {0} och {1}.</value>
+  </data>
+  <data name="Validation.MaxTableRange" xml:space="preserve">
+    <value>maxTable måste vara mellan {0} och {1}.</value>
+  </data>
+  <data name="Validation.MinGreaterThanMax" xml:space="preserve">
+    <value>minTable måste vara mindre än eller lika med maxTable.</value>
   </data>
   <data name="LanguageSv" xml:space="preserve">
     <value>Svenska</value>

@@ -17,7 +17,7 @@ cd MathHelpApp
 dotnet run
 ```
 
-The app opens automatically at `http://localhost:5000`.
+The app opens at the URL shown in the console (typically `http://localhost:5086`; see [launchSettings.json](MathHelpApp/Properties/launchSettings.json)).
 
 ## Development
 

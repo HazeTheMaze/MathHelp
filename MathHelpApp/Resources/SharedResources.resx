@@ -88,6 +88,12 @@
   <data name="BtnDownloadPracticeSheets" xml:space="preserve">
     <value>Download practice sheets + answer key</value>
   </data>
+  <data name="BtnDownloadPracticeSheet" xml:space="preserve">
+    <value>Download practice sheet</value>
+  </data>
+  <data name="BtnDownloadAnswerSheet" xml:space="preserve">
+    <value>Download answer key</value>
+  </data>
   <data name="BtnDownloadPdf" xml:space="preserve">
     <value>Download PDF</value>
   </data>
@@ -291,6 +297,15 @@
   </data>
   <data name="DownloadFailed" xml:space="preserve">
     <value>Download failed. Please try again.</value>
+  </data>
+  <data name="Validation.MinTableRange" xml:space="preserve">
+    <value>minTable must be between {0} and {1}.</value>
+  </data>
+  <data name="Validation.MaxTableRange" xml:space="preserve">
+    <value>maxTable must be between {0} and {1}.</value>
+  </data>
+  <data name="Validation.MinGreaterThanMax" xml:space="preserve">
+    <value>minTable must be less than or equal to maxTable.</value>
   </data>
   <data name="LanguageSv" xml:space="preserve">
     <value>Svenska</value>

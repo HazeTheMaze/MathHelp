@@ -27,10 +27,6 @@
         throw new Error('jsPDF not loaded');
     }
 
-    function getJsPdf() {
-        return new getJsPdfLib().jsPDF();
-    }
-
     function drawProblemRow(doc, lib, groupX, groupY, groupW, globalIndex, a, b, answer, showAnswer, useFormFields, y) {
         doc.setFontSize(FONT_SIZE);
         var timesStr = ' × ';
