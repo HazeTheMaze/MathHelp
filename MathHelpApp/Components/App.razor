@@ -31,12 +31,14 @@ else
         {
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en");
             CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en");
+            await JS.InvokeVoidAsync("MathHelpCulture.setLang", "en");
             _cultureReady = true;
             return;
         }
         var ci = (culture == "sv" || culture == "en") ? new CultureInfo(culture) : new CultureInfo("en");
         CultureInfo.DefaultThreadCurrentCulture = ci;
         CultureInfo.DefaultThreadCurrentUICulture = ci;
+        await JS.InvokeVoidAsync("MathHelpCulture.setLang", ci.TwoLetterISOLanguageName);
         _cultureReady = true;
     }
 }
