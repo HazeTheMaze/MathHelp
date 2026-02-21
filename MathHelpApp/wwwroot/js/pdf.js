@@ -1,6 +1,3 @@
-// PDF generation in the browser using jsPDF. Called from Blazor via MathHelpPdf.download(json).
-// Layout: 3 columns of groups, 10 problems per group; fixed-width groups; partial last row centered.
-// Portrait A4. Answer line always drawn for print.
 (function () {
     'use strict';
 
@@ -8,7 +5,6 @@
     var GROUPS_PER_PAGE = 10;
     var COLS = 3;
     var PROBLEMS_PER_PAGE = 100;
-    /** Max groups per page for reference (table) PDFs: 4 cols × 3 rows = 12. */
     var REFERENCE_GROUPS_PER_PAGE = 12;
     var PAGE_W = 210;
     var PAGE_H = 297;
@@ -45,7 +41,6 @@
         var maxBW = doc.getTextWidth('12');
         var aStr = String(a);
         var bStr = String(b);
-        // Center the whole problem (a × b = ____) horizontally within the group
         var totalContentWidth = maxAW + wTimes + maxBW + wEquals + ANSWER_LINE_LENGTH;
         var contentStartX = groupX + (groupW - totalContentWidth) / 2;
         var xTimes = contentStartX + maxAW;
@@ -69,7 +64,7 @@
                     textField.fieldName = 'ans_' + String(globalIndex);
                     textField.Rect = [xLineStart, y - 3.5, Math.min(ANSWER_LINE_LENGTH, groupX + groupW - 2 - xLineStart), 4.5];
                     doc.addField(textField);
-                } catch (e) { /* line already drawn */ }
+                } catch (e) { }
             }
         }
     }
@@ -117,7 +112,6 @@
         for (var g = 0; g < numGroups; g++) {
             var col = g % colsUsed;
             var row = Math.floor(g / colsUsed);
-            // Last row may have fewer groups: center that row horizontally; full rows stay left-aligned
             var numGroupsInRow = (row === totalRows - 1)
                 ? (numGroups - row * colsUsed)
                 : colsUsed;
@@ -154,7 +148,6 @@
         var showAnswers = opts.showAnswers;
         var problemsPerGroup = opts.problemsPerGroup;
         var problems = opts.problems || [];
-        // Reference PDFs always use 4 columns. Paginate by full groups only.
         var cols = 4;
         var problemsPerPage = problemsPerGroup * REFERENCE_GROUPS_PER_PAGE;
         var pageNum = 0;

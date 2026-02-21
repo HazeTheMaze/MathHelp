@@ -1,4 +1,5 @@
 @page "/"
+@using MathHelpApp.Constants
 @inject IStringLocalizer<SharedResources> Loc
 @inject IBrowserPdfService PdfService
 @inject IMultiplicationService MathService
@@ -7,6 +8,7 @@
 <PageTitle>@Loc["PageTitleHome"]</PageTitle>
 
 <div class="create-page">
+    <h1 class="visually-hidden">@Loc["CategoryMultiplication"]</h1>
     <div class="home-hero-card-wrapper">
         <div class="home-hero-card">
             <div class="home-card-inner">
@@ -63,7 +65,7 @@
                             <div class="col-md-4">
                                 <label for="home-minTable" class="form-label">@Loc["LabelFromTable"]</label>
                                 <select id="home-minTable" class="form-select" @bind="_minTable">
-                                    @for (int i = 1; i <= 12; i++)
+                                    @for (int i = MathConstants.MinTableNumber; i <= MathConstants.MaxTableNumber; i++)
                                     {
                                         <option value="@i" disabled="@(i > _maxTable)">@i</option>
                                     }
@@ -72,7 +74,7 @@
                             <div class="col-md-4">
                                 <label for="home-maxTable" class="form-label">@Loc["LabelToTable"]</label>
                                 <select id="home-maxTable" class="form-select" @bind="_maxTable">
-                                    @for (int i = 1; i <= 12; i++)
+                                    @for (int i = MathConstants.MinTableNumber; i <= MathConstants.MaxTableNumber; i++)
                                     {
                                         <option value="@i" disabled="@(i < _minTable)">@i</option>
                                     }
@@ -81,7 +83,7 @@
                             <div class="col-md-4 home-form-col-sheets">
                                 <label for="home-sheetCount" class="form-label">@Loc["LabelSheetCount"]</label>
                                 <select id="home-sheetCount" class="form-select" disabled="@(selectedType == PdfType.Reference)" @bind="_sheetCount">
-                                    @for (int i = 1; i <= 10; i++)
+                                    @for (int i = 1; i <= MathConstants.MaxSheetCountSelect; i++)
                                     {
                                         <option value="@i">@i</option>
                                     }
@@ -89,6 +91,10 @@
                             </div>
                         </div>
                         <div class="mt-4 text-center">
+                            @if (_downloadError is not null)
+                            {
+                                <p class="text-danger small mb-2">@_downloadError</p>
+                            }
                             <button type="button" class="btn btn-primary btn-lg" disabled="@_downloading" @onclick="OnDownloadPdf">
                                 @(_downloading ? Loc["Loading"] : Loc["BtnDownloadPdf"])
                             </button>
@@ -108,14 +114,64 @@
     private int _maxTable = 12;
     private int _sheetCount = 1;
     private bool _downloading;
+    private string? _downloadError;
+
+    protected override void OnInitialized()
+    {
+        var tab = GetQueryParam("tab");
+        if (string.Equals(tab, "practice", StringComparison.OrdinalIgnoreCase))
+            selectedType = PdfType.Practice;
+        else
+            selectedType = PdfType.Reference;
+    }
+
+    private string? GetQueryParam(string name)
+    {
+        var uri = new Uri(Navigation.Uri);
+        var query = uri.Query;
+        if (string.IsNullOrEmpty(query) || query.Length < 2) return null;
+        foreach (var pair in query.AsSpan(1).ToString().Split('&'))
+        {
+            var eq = pair.IndexOf('=');
+            if (eq > 0 && string.Equals(Uri.UnescapeDataString(pair[..eq].Trim()), name, StringComparison.OrdinalIgnoreCase))
+                return eq < pair.Length - 1 ? Uri.UnescapeDataString(pair[(eq + 1)..].Trim()) : "";
+        }
+        return null;
+    }
+
+    private void SetQueryParam(string name, string value)
+    {
+        var uri = new Uri(Navigation.Uri);
+        var query = uri.Query;
+        var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (!string.IsNullOrEmpty(query) && query.Length > 1)
+        {
+            foreach (var pair in query.AsSpan(1).ToString().Split('&'))
+            {
+                var eq = pair.IndexOf('=');
+                if (eq > 0)
+                    dict[Uri.UnescapeDataString(pair[..eq].Trim())] = eq < pair.Length - 1 ? Uri.UnescapeDataString(pair[(eq + 1)..].Trim()) : "";
+                else if (!string.IsNullOrWhiteSpace(pair))
+                    dict[Uri.UnescapeDataString(pair.Trim())] = "";
+            }
+        }
+        dict[name] = value;
+        var newQuery = string.Join("&", dict.Select(kv => $"{Uri.EscapeDataString(kv.Key)}={Uri.EscapeDataString(kv.Value)}"));
+        var path = uri.GetLeftPart(UriPartial.Path).TrimEnd('/');
+        if (string.IsNullOrEmpty(path)) path = "/";
+        var newUrl = string.IsNullOrEmpty(newQuery) ? path : path + "?" + newQuery;
+        Navigation.NavigateTo(newUrl, replace: true);
+    }
 
     private void SelectType(PdfType type)
     {
         selectedType = type;
+        SetQueryParam("tab", type == PdfType.Practice ? "practice" : "reference");
     }
 
     private async Task OnDownloadPdf()
     {
+        _downloadError = null;
         _downloading = true;
         try
         {
@@ -134,6 +190,10 @@
                 await PdfService.DownloadPracticePdfAsync(allSheets);
                 await PdfService.DownloadPracticeAnswerSheetPdfAsync(allSheets);
             }
+        }
+        catch
+        {
+            _downloadError = Loc["DownloadFailed"].Value;
         }
         finally
         {
