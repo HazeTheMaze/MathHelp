@@ -274,4 +274,19 @@
   <data name="NotFoundMessage" xml:space="preserve">
     <value>Tyvärr finns inte innehållet du söker.</value>
   </data>
+  <data name="PdfTitleMultiplicationTables" xml:space="preserve">
+    <value>Multiplikationstabeller {0}-{1}</value>
+  </data>
+  <data name="PdfTitlePageSuffix" xml:space="preserve">
+    <value> (sida {0})</value>
+  </data>
+  <data name="PdfPracticeSheet" xml:space="preserve">
+    <value>Övningsblad</value>
+  </data>
+  <data name="PdfAnswerSheet" xml:space="preserve">
+    <value>Facit</value>
+  </data>
+  <data name="PdfSheetNumberSuffix" xml:space="preserve">
+    <value> {0}</value>
+  </data>
 </root>

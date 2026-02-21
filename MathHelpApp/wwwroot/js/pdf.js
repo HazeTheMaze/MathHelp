@@ -8,6 +8,8 @@
     var GROUPS_PER_PAGE = 10;
     var COLS = 3;
     var PROBLEMS_PER_PAGE = 100;
+    /** Max groups per page for reference (table) PDFs: 4 cols × 3 rows = 12. */
+    var REFERENCE_GROUPS_PER_PAGE = 12;
     var PAGE_W = 210;
     var PAGE_H = 297;
     var MARGIN = 15;
@@ -91,7 +93,10 @@
         }
     }
 
-    function renderPageOfGroups(doc, lib, problems, title, showAnswers, problemOffset, useFormFields, siteName, siteUrl) {
+    function renderPageOfGroups(doc, lib, problems, title, showAnswers, problemOffset, useFormFields, siteName, siteUrl, problemsPerGroup, cols) {
+        var perGroup = (problemsPerGroup !== undefined && problemsPerGroup !== null) ? problemsPerGroup : PROBLEMS_PER_GROUP;
+        var colsUsed = (cols !== undefined && cols !== null) ? cols : COLS;
+
         doc.setFont('times', 'bold');
         doc.setFontSize(16);
         doc.text(title, PAGE_W / 2, TITLE_MARGIN_TOP, { align: 'center' });
@@ -103,25 +108,25 @@
         var contentTop = TITLE_MARGIN_TOP + TITLE_RULE_OFFSET + TITLE_CONTENT_GAP;
         var contentWidth = PAGE_W - 2 * MARGIN;
         var contentBottom = PAGE_H - MARGIN - FOOTER_HEIGHT;
-        var colW = contentWidth / COLS;
-        var groupHeight = 10 * LINE_HEIGHT + GROUP_VSPACING;
+        var colW = contentWidth / colsUsed;
+        var groupHeight = perGroup * LINE_HEIGHT + GROUP_VSPACING;
 
-        var numGroups = Math.ceil(problems.length / PROBLEMS_PER_GROUP);
-        var totalRows = Math.ceil(numGroups / COLS);
+        var numGroups = Math.ceil(problems.length / perGroup);
+        var totalRows = Math.ceil(numGroups / colsUsed);
 
         for (var g = 0; g < numGroups; g++) {
-            var col = g % COLS;
-            var row = Math.floor(g / COLS);
-            // Last row may have 1 or 2 groups: center that row horizontally; full rows stay left-aligned
+            var col = g % colsUsed;
+            var row = Math.floor(g / colsUsed);
+            // Last row may have fewer groups: center that row horizontally; full rows stay left-aligned
             var numGroupsInRow = (row === totalRows - 1)
-                ? (numGroups - row * COLS)
-                : COLS;
+                ? (numGroups - row * colsUsed)
+                : colsUsed;
             var rowStartX = MARGIN + (contentWidth - numGroupsInRow * colW) / 2;
             var groupX = rowStartX + col * colW;
             var groupY = contentTop + row * groupHeight;
 
-            for (var i = 0; i < PROBLEMS_PER_GROUP; i++) {
-                var idx = g * PROBLEMS_PER_GROUP + i;
+            for (var i = 0; i < perGroup; i++) {
+                var idx = g * perGroup + i;
                 if (idx >= problems.length) break;
                 var p = problems[idx];
                 var y = groupY + i * LINE_HEIGHT;
@@ -147,16 +152,22 @@
         var minTable = opts.minTable;
         var maxTable = opts.maxTable;
         var showAnswers = opts.showAnswers;
+        var problemsPerGroup = opts.problemsPerGroup;
         var problems = opts.problems || [];
+        // Reference PDFs always use 4 columns. Paginate by full groups only.
+        var cols = 4;
+        var problemsPerPage = problemsPerGroup * REFERENCE_GROUPS_PER_PAGE;
         var pageNum = 0;
-        for (var start = 0; start < problems.length; start += PROBLEMS_PER_PAGE) {
+        var titleRangeFormat = opts.pdfTitleMultiplicationTables || 'Multiplication tables {0}-{1}';
+        var titlePageSuffixFormat = opts.pdfTitlePageSuffix || ' (page {0})';
+        for (var start = 0; start < problems.length; start += problemsPerPage) {
             if (pageNum > 0) doc.addPage();
-            var chunk = problems.slice(start, start + PROBLEMS_PER_PAGE);
-            var title = 'Multiplication tables ' + minTable + '-' + maxTable;
-            if (problems.length > PROBLEMS_PER_PAGE) {
-                title += ' (page ' + (pageNum + 1) + ')';
+            var chunk = problems.slice(start, start + problemsPerPage);
+            var title = titleRangeFormat.replace('{0}', minTable).replace('{1}', maxTable);
+            if (problems.length > problemsPerPage) {
+                title += titlePageSuffixFormat.replace('{0}', pageNum + 1);
             }
-            renderPageOfGroups(doc, lib, chunk, title, showAnswers, start, false, site.siteName, site.siteUrl);
+            renderPageOfGroups(doc, lib, chunk, title, showAnswers, start, false, site.siteName, site.siteUrl, problemsPerGroup, cols);
             pageNum++;
         }
         doc.save(showAnswers ? 'multiplication-table-answers.pdf' : 'multiplication-table.pdf');
@@ -168,11 +179,14 @@
         var site = getSiteOpts(opts);
         var sheets = opts.sheets || [];
         var showAnswers = opts.showAnswers === true;
+        var practiceLabel = opts.pdfPracticeSheet || 'Practice sheet';
+        var answerLabel = opts.pdfAnswerSheet || 'Answer sheet';
+        var sheetNumberSuffix = opts.pdfSheetNumberSuffix !== undefined ? opts.pdfSheetNumberSuffix : ' {0}';
         for (var s = 0; s < sheets.length; s++) {
             if (s > 0) doc.addPage();
             var problems = sheets[s];
-            var title = (showAnswers ? 'Answer sheet' : 'Practice sheet') + (sheets.length > 1 ? ' ' + (s + 1) : '');
-            renderPageOfGroups(doc, lib, problems, title, showAnswers, s * PROBLEMS_PER_PAGE, !showAnswers, site.siteName, site.siteUrl);
+            var title = (showAnswers ? answerLabel : practiceLabel) + (sheets.length > 1 ? sheetNumberSuffix.replace('{0}', s + 1) : '');
+            renderPageOfGroups(doc, lib, problems, title, showAnswers, s * PROBLEMS_PER_PAGE, !showAnswers, site.siteName, site.siteUrl, PROBLEMS_PER_GROUP);
         }
         var name = sheets.length > 1
             ? (showAnswers ? 'practice-sheets-' + sheets.length + '-answers.pdf' : 'practice-sheets-' + sheets.length + '.pdf')

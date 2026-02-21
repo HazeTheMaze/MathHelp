@@ -274,4 +274,19 @@
   <data name="NotFoundMessage" xml:space="preserve">
     <value>Sorry, the content you are looking for does not exist.</value>
   </data>
+  <data name="PdfTitleMultiplicationTables" xml:space="preserve">
+    <value>Multiplication tables {0}-{1}</value>
+  </data>
+  <data name="PdfTitlePageSuffix" xml:space="preserve">
+    <value> (page {0})</value>
+  </data>
+  <data name="PdfPracticeSheet" xml:space="preserve">
+    <value>Practice sheet</value>
+  </data>
+  <data name="PdfAnswerSheet" xml:space="preserve">
+    <value>Answer sheet</value>
+  </data>
+  <data name="PdfSheetNumberSuffix" xml:space="preserve">
+    <value> {0}</value>
+  </data>
 </root>
