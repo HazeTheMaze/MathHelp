@@ -14,6 +14,9 @@
 
   <!-- Shared properties for all projects in this repository -->
   <PropertyGroup>
+    <!-- NuGet lock file: generate packages.lock.json and enforce in CI -->
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+
     <!-- Language features -->
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>

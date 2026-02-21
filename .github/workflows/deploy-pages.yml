@@ -30,8 +30,11 @@ jobs:
         with:
           dotnet-version: '10.x'
 
+      - name: Restore (locked)
+        run: dotnet restore MathHelpApp/MathHelpApp.csproj --locked-mode
+
       - name: Publish Blazor WASM
-        run: dotnet publish MathHelpApp/MathHelpApp.csproj -c Release -o publish
+        run: dotnet publish MathHelpApp/MathHelpApp.csproj -c Release -o publish --no-restore
 
       - name: Upload artifact for Pages
         uses: actions/upload-pages-artifact@v3
