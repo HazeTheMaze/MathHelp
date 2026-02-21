@@ -39,4 +39,14 @@ public static class MathConstants
     /// Maximum number of practice sheets that can be generated at once.
     /// </summary>
     public const int MaxSheetCount = 100;
+
+    /// <summary>
+    /// Maximum value in the sheet count dropdown on the home page (1..MaxSheetCountSelect).
+    /// </summary>
+    public const int MaxSheetCountSelect = 10;
+
+    /// <summary>
+    /// Number of problems per group for reference PDFs when the range is partial (e.g. 5-10).
+    /// </summary>
+    public const int ReferenceProblemsPerGroupPartialRange = 5;
 }
