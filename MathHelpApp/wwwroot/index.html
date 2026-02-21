@@ -4,27 +4,18 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Base href is / for local dev; deploy-pages workflow rewrites it to /<repo>/ for GitHub Pages. -->
     <base id="baseTag" href="/" />
-    <!-- Base href must be set at runtime for GitHub Pages subpath. -->
-    <script>
-        (function () {
-            var path = window.location.pathname;
-            var base = path.endsWith('/') ? path : path + '/';
-            if (!base) base = '/';
-            var el = document.getElementById('baseTag');
-            if (el) el.href = base;
-        })();
-    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="app.css" />
     <link rel="icon" type="image/png" href="app_icon.png" />
     <title>Mattehjälpen</title>
-    <!-- Script order intentional: culture and PDF scripts must load before Blazor. -->
+    <!-- culture.js loads without defer so MathHelpCulture is defined before Blazor runs; PDF scripts use defer. -->
     <script src="https://cdn.jsdelivr.net/npm/jspdf@4.2.0/dist/jspdf.umd.min.js" crossorigin="anonymous" integrity="sha384-QgylrxI5Yl5GgBcwJUoY+eXWrJ8Hdd2yCLHPCD/q90kMXcaRulJnwQ0U94saGFR1" defer></script>
     <script src="js/pdf.js" defer></script>
-    <script src="js/culture.js" defer></script>
+    <script src="js/culture.js"></script>
 </head>
 
 <body>

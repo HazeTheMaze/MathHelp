@@ -36,6 +36,11 @@ jobs:
       - name: Publish Blazor WASM
         run: dotnet publish MathHelpApp/MathHelpApp.csproj -c Release -o publish --no-restore
 
+      - name: Set base href for GitHub Pages
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          sed -i "s|<base id=\"baseTag\" href=\"/\" />|<base id=\"baseTag\" href=\"/${REPO_NAME}/\" />|" publish/wwwroot/index.html
+
       - name: Upload artifact for Pages
         uses: actions/upload-pages-artifact@v3
         with:

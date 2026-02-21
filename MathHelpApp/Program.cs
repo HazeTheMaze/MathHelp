@@ -55,7 +55,14 @@ catch (Exception ex)
     logger.LogWarning(ex, "MathHelpCulture.getInitial failed; using default culture 'en'");
     CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en");
     CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en");
-    await js.InvokeVoidAsync("MathHelpCulture.setLang", CancellationToken.None, "en");
+    try
+    {
+        await js.InvokeVoidAsync("MathHelpCulture.setLang", CancellationToken.None, "en");
+    }
+    catch (Exception setLangEx)
+    {
+        logger.LogWarning(setLangEx, "MathHelpCulture.setLang failed in fallback; culture already set to 'en'");
+    }
 }
 
 await host.RunAsync();
