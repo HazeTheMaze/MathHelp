@@ -46,8 +46,11 @@ public sealed partial class CultureSelector : IAsyncDisposable
             return;
         }
 
-        _isOpen = false;
-        StateHasChanged();
+        _ = InvokeAsync(() =>
+        {
+            _isOpen = false;
+            StateHasChanged();
+        });
     }
 
     /// <inheritdoc/>

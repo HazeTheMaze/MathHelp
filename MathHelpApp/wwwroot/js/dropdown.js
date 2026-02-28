@@ -16,7 +16,10 @@ window.MathHelpDropdown = {
         
         // Defer registration to avoid closing on the same click that opens the dropdown
         setTimeout(function () {
-            document.addEventListener('click', handleClickOutside);
+            // Check if element still exists before registering
+            if (document.body.contains(element)) {
+                document.addEventListener('click', handleClickOutside);
+            }
         }, 0);
     },
 
