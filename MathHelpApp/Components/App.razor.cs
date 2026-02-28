@@ -1,15 +1,6 @@
 namespace MathHelpApp.Components;
 
 /// <summary>
-/// Culture is set once at startup in Program.cs (getInitial + setLang). This component only gates rendering until ready.
+/// Root application component hosting the router.
 /// </summary>
-public sealed partial class App
-{
-    private bool _cultureReady;
-
-    /// <inheritdoc />
-    protected override void OnInitialized()
-    {
-        _cultureReady = true;
-    }
-}
+public sealed partial class App;

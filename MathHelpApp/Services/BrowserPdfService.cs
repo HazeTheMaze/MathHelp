@@ -30,6 +30,9 @@ internal sealed class BrowserPdfService : IBrowserPdfService
 
     public async Task DownloadTablePdfAsync(int minTable, int maxTable, bool showAnswers)
     {
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(minTable, maxTable, nameof(minTable));
+
+        // Full range (1..N) shows N problems per group; partial ranges use a fixed count.
         int problemsPerGroup = minTable == 1 ? maxTable : MathConstants.ReferenceProblemsPerGroupPartialRange;
 
         var problems = new List<object>();
@@ -51,7 +54,7 @@ internal sealed class BrowserPdfService : IBrowserPdfService
             problems,
             pdfTitleMultiplicationTables = _loc["PdfTitleMultiplicationTables"].Value,
             pdfTitlePageSuffix = _loc["PdfTitlePageSuffix"].Value,
-            siteName = "MathHelp",
+            siteName = MathConstants.SiteName,
             siteUrl = GetSiteUrl(_navigation)
         };
 
@@ -72,7 +75,7 @@ internal sealed class BrowserPdfService : IBrowserPdfService
             pdfPracticeSheet = _loc["PdfPracticeSheet"].Value,
             pdfAnswerSheet = _loc["PdfAnswerSheet"].Value,
             pdfSheetNumberSuffix = _loc["PdfSheetNumberSuffix"].Value,
-            siteName = "MathHelp",
+            siteName = MathConstants.SiteName,
             siteUrl = GetSiteUrl(_navigation)
         };
 

@@ -2,7 +2,7 @@
     var currentCulture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 }
 
-<div class="culture-selector">
+<div class="culture-selector" @onfocusout="OnFocusOut" @onkeydown="OnKeyDown">
     <button type="button"
             class="culture-trigger"
             aria-label="@(currentCulture == "sv" ? Loc["LanguageSv"] : Loc["LanguageEn"])"

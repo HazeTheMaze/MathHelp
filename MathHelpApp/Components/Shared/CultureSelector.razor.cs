@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using MathHelpApp.Resources;
 using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
@@ -25,6 +26,19 @@ public sealed partial class CultureSelector
     private bool _isOpen;
 
     private void Toggle() => _isOpen = !_isOpen;
+
+    private void OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Escape" && _isOpen)
+        {
+            _isOpen = false;
+        }
+    }
+
+    private void OnFocusOut()
+    {
+        _isOpen = false;
+    }
 
     private async Task SetCultureAsync(string culture)
     {

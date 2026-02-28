@@ -6,23 +6,20 @@ using MathHelpApp.Components;
 using MathHelpApp.Resources;
 using MathHelpApp.Services;
 
+string[] supportedCultures = ["en", "sv"];
+
 // Preload satellite assemblies if present; ignore if not (e.g. single culture deployment).
 var mainAssembly = typeof(SharedResources).Assembly;
-try
+foreach (var lang in supportedCultures)
 {
-    mainAssembly.GetSatelliteAssembly(new CultureInfo("en"));
-}
-catch (Exception ex)
-{
-    System.Diagnostics.Debug.WriteLine($"Satellite assembly preload skipped: {ex.Message}");
-}
-try
-{
-    mainAssembly.GetSatelliteAssembly(new CultureInfo("sv"));
-}
-catch (Exception ex)
-{
-    System.Diagnostics.Debug.WriteLine($"Satellite assembly preload skipped: {ex.Message}");
+    try
+    {
+        mainAssembly.GetSatelliteAssembly(new CultureInfo(lang));
+    }
+    catch (Exception ex)
+    {
+        System.Diagnostics.Debug.WriteLine($"Satellite assembly preload skipped: {ex.Message}");
+    }
 }
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -41,27 +38,28 @@ var js = host.Services.GetRequiredService<IJSRuntime>();
 try
 {
     var culture = await js.InvokeAsync<string>("MathHelpCulture.getInitial", CancellationToken.None, Array.Empty<object>());
-    var ci = culture is "sv" or "en"
+    var ci = supportedCultures.Contains(culture, StringComparer.Ordinal)
         ? new CultureInfo(culture)
-        : new CultureInfo("en");
+        : new CultureInfo(supportedCultures[0]);
     CultureInfo.DefaultThreadCurrentCulture = ci;
     CultureInfo.DefaultThreadCurrentUICulture = ci;
     await js.InvokeVoidAsync("MathHelpCulture.setLang", CancellationToken.None, ci.TwoLetterISOLanguageName);
 }
 catch (Exception ex)
 {
+    var fallback = new CultureInfo(supportedCultures[0]);
     var logger = host.Services.GetRequiredService<Microsoft.Extensions.Logging.ILoggerFactory>()
         .CreateLogger("MathHelp.Program");
-    logger.LogWarning(ex, "MathHelpCulture.getInitial failed; using default culture 'en'");
-    CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en");
-    CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en");
+    logger.LogWarning(ex, "MathHelpCulture.getInitial failed; using default culture '{Culture}'", fallback.Name);
+    CultureInfo.DefaultThreadCurrentCulture = fallback;
+    CultureInfo.DefaultThreadCurrentUICulture = fallback;
     try
     {
-        await js.InvokeVoidAsync("MathHelpCulture.setLang", CancellationToken.None, "en");
+        await js.InvokeVoidAsync("MathHelpCulture.setLang", CancellationToken.None, fallback.TwoLetterISOLanguageName);
     }
     catch (Exception setLangEx)
     {
-        logger.LogWarning(setLangEx, "MathHelpCulture.setLang failed in fallback; culture already set to 'en'");
+        logger.LogWarning(setLangEx, "MathHelpCulture.setLang failed in fallback; culture already set to '{Culture}'", fallback.Name);
     }
 }
 

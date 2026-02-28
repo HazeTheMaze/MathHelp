@@ -296,13 +296,13 @@
     <value>Download failed. Please try again.</value>
   </data>
   <data name="Validation.MinTableRange" xml:space="preserve">
-    <value>minTable must be between {0} and {1}.</value>
+    <value>Smallest table must be between {0} and {1}.</value>
   </data>
   <data name="Validation.MaxTableRange" xml:space="preserve">
-    <value>maxTable must be between {0} and {1}.</value>
+    <value>Largest table must be between {0} and {1}.</value>
   </data>
   <data name="Validation.MinGreaterThanMax" xml:space="preserve">
-    <value>minTable must be less than or equal to maxTable.</value>
+    <value>Smallest table must be less than or equal to largest table.</value>
   </data>
   <data name="LanguageSv" xml:space="preserve">
     <value>Svenska</value>

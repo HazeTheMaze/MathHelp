@@ -49,4 +49,9 @@ internal static class MathConstants
     /// Number of problems per group for reference PDFs when the range is partial (e.g. 5-10).
     /// </summary>
     public const int ReferenceProblemsPerGroupPartialRange = 5;
+
+    /// <summary>
+    /// Application name used in PDF metadata and footers.
+    /// </summary>
+    public const string SiteName = "MathHelp";
 }
