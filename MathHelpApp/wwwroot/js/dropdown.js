@@ -13,7 +13,11 @@ window.MathHelpDropdown = {
 
         // Store the handler so we can remove it later
         element._clickOutsideHandler = handleClickOutside;
-        document.addEventListener('click', handleClickOutside);
+        
+        // Defer registration to avoid closing on the same click that opens the dropdown
+        setTimeout(function () {
+            document.addEventListener('click', handleClickOutside);
+        }, 0);
     },
 
     // Unregisters the click-outside handler for a dropdown component

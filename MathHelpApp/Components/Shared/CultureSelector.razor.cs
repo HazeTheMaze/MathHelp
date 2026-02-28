@@ -70,9 +70,13 @@ public sealed partial class CultureSelector : IAsyncDisposable
             {
                 await Js.InvokeVoidAsync("MathHelpDropdown.unregisterClickOutside", ".culture-selector");
             }
-            catch
+            catch (JSDisconnectedException)
             {
-                // Ignore errors during cleanup
+                // JavaScript runtime is already disconnected, no cleanup needed
+            }
+            catch (TaskCanceledException)
+            {
+                // Operation was cancelled, no cleanup needed
             }
             finally
             {
