@@ -9,7 +9,7 @@ namespace MathHelpApp.Components.Shared;
 /// <summary>
 /// UI for switching between supported cultures (e.g. EN/SV).
 /// </summary>
-public sealed partial class CultureSelector
+public sealed partial class CultureSelector : IAsyncDisposable
 {
     /// <summary>Used to reload the page after culture change.</summary>
     [Inject]
@@ -24,6 +24,8 @@ public sealed partial class CultureSelector
     public IStringLocalizer<SharedResources> Loc { get; set; } = null!;
 
     private bool _isOpen;
+    private DotNetObjectReference<CultureSelector>? _dotNetRef;
+    private bool _isDisposed;
 
     private void Toggle() => _isOpen = !_isOpen;
 
@@ -35,9 +37,55 @@ public sealed partial class CultureSelector
         }
     }
 
-    private void OnFocusOut()
+    /// <summary>Called from JavaScript when a click occurs outside the component.</summary>
+    [JSInvokable]
+    public void CloseFromJavaScript()
     {
-        _isOpen = false;
+        if (_isDisposed)
+        {
+            return;
+        }
+
+        _ = InvokeAsync(() =>
+        {
+            _isOpen = false;
+            StateHasChanged();
+        });
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _dotNetRef = DotNetObjectReference.Create(this);
+            await Js.InvokeVoidAsync("MathHelpDropdown.registerClickOutside", _dotNetRef, ".culture-selector");
+        }
+    }
+
+    /// <inheritdoc/>
+    public async ValueTask DisposeAsync()
+    {
+        _isDisposed = true;
+        if (_dotNetRef is not null)
+        {
+            try
+            {
+                await Js.InvokeVoidAsync("MathHelpDropdown.unregisterClickOutside", ".culture-selector");
+            }
+            catch (JSDisconnectedException)
+            {
+                // JavaScript runtime is already disconnected, no cleanup needed
+            }
+            catch (TaskCanceledException)
+            {
+                // Operation was cancelled, no cleanup needed
+            }
+            finally
+            {
+                _dotNetRef.Dispose();
+            }
+        }
     }
 
     private async Task SetCultureAsync(string culture)
