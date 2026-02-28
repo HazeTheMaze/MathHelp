@@ -17,13 +17,13 @@
     @if (_isOpen)
     {
         <div class="culture-dropdown" role="menu">
-            <button type="button" class="culture-option" role="menuitem" @onclick='() => SetCultureAsync("sv")'>
+            <button type="button" class="culture-option" role="menuitem" @onmousedown:preventDefault @onclick='() => SetCultureAsync("sv")'>
                 <span class="culture-flag culture-flag-svg" aria-hidden="true">
                     <img src="images/flags/Flag_of_Sweden.svg" alt="" loading="lazy" />
                 </span>
                 <span>@Loc["LanguageSv"]</span>
             </button>
-            <button type="button" class="culture-option" role="menuitem" @onclick='() => SetCultureAsync("en")'>
+            <button type="button" class="culture-option" role="menuitem" @onmousedown:preventDefault @onclick='() => SetCultureAsync("en")'>
                 <span class="culture-flag culture-flag-svg" aria-hidden="true">
                     <img src="images/flags/Flag_of_Europe.svg" alt="" loading="lazy" />
                 </span>
