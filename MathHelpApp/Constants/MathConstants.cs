@@ -31,11 +31,6 @@ internal static class MathConstants
     public const int GroupsPerSheet = ProblemsPerSheet / ProblemsPerGroup;
 
     /// <summary>
-    /// Number of columns used when displaying groups in PDF layout (2x5 grid for 10 groups).
-    /// </summary>
-    public const int ColumnsPerRow = 2;
-
-    /// <summary>
     /// Maximum number of practice sheets that can be generated at once.
     /// </summary>
     public const int MaxSheetCount = 100;
