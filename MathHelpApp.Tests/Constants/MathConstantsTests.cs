@@ -45,12 +45,6 @@ public sealed class MathConstantsTests
     }
 
     [Test]
-    public void ColumnsPerRow_ShouldBe2()
-    {
-        MathConstants.ColumnsPerRow.ShouldBe(2);
-    }
-
-    [Test]
     public void MaxSheetCount_ShouldBe100()
     {
         MathConstants.MaxSheetCount.ShouldBe(100);
@@ -61,13 +55,5 @@ public sealed class MathConstantsTests
     {
         // This ensures GroupsPerSheet calculation doesn't lose precision
         (MathConstants.ProblemsPerSheet % MathConstants.ProblemsPerGroup).ShouldBe(0);
-    }
-
-    [Test]
-    public void GroupsPerSheet_ShouldBeDivisibleByColumnsPerRow_ForEvenLayout()
-    {
-        // 2×5 layout: 10 groups / 2 columns = 5 full rows, no orphan groups
-        var remainder = MathConstants.GroupsPerSheet % MathConstants.ColumnsPerRow;
-        remainder.ShouldBe(0);
     }
 }

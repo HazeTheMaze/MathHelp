@@ -12,8 +12,10 @@
                 <ul class="home-sheet-tabs" role="tablist">
                     <li role="presentation">
                         <button type="button"
+                                id="tab-reference"
                                 role="tab"
                                 aria-selected="@(!_showHelp && _selectedType == PdfType.Reference)"
+                                aria-controls="tabpanel-content"
                                 class="home-sheet-tab @(!_showHelp && _selectedType == PdfType.Reference ? "active" : "")"
                                 @onclick="@(() => { _showHelp = false; SelectType(PdfType.Reference); })">
                             @Loc["TabReferensblad"]
@@ -21,8 +23,10 @@
                     </li>
                     <li role="presentation">
                         <button type="button"
+                                id="tab-practice"
                                 role="tab"
                                 aria-selected="@(!_showHelp && _selectedType == PdfType.Practice)"
+                                aria-controls="tabpanel-content"
                                 class="home-sheet-tab @(!_showHelp && _selectedType == PdfType.Practice ? "active" : "")"
                                 @onclick="@(() => { _showHelp = false; SelectType(PdfType.Practice); })">
                             @Loc["TabOvningsblad"]
@@ -30,9 +34,11 @@
                     </li>
                     <li class="home-sheet-tabs-help" role="presentation">
                         <button type="button"
+                                id="tab-help"
                                 role="tab"
                                 aria-selected="@_showHelp"
                                 aria-label="@Loc["TabHelp"]"
+                                aria-controls="tabpanel-content"
                                 class="home-sheet-tab home-sheet-tab-help @(_showHelp ? "active" : "")"
                                 @onclick="@(() => _showHelp = !_showHelp)">
                             <span class="home-sheet-tab-icon" aria-hidden="true">
@@ -47,7 +53,7 @@
 
                 @if (_showHelp)
                 {
-                    <div class="home-help-content text-muted">
+                    <div id="tabpanel-content" class="home-help-content text-muted" role="tabpanel" aria-labelledby="tab-help">
                         <p class="mb-2">@Loc["HelpIntro"]</p>
                         <p class="mb-1">@Loc["TableRangeExplanation"]</p>
                         <p class="mb-0">@Loc["SheetCountExplanation"]</p>
@@ -55,7 +61,7 @@
                 }
                 else
                 {
-                    <div class="home-create-form @(_selectedType == PdfType.Reference ? "is-reference" : "is-practice")">
+                    <div id="tabpanel-content" class="home-create-form @(_selectedType == PdfType.Reference ? "is-reference" : "is-practice")" role="tabpanel" aria-labelledby="@(_selectedType == PdfType.Reference ? "tab-reference" : "tab-practice")">
                         <div class="row g-3 home-form-row">
                             <div class="col-md-4">
                                 <label for="home-minTable" class="form-label">@Loc["LabelFromTable"]</label>

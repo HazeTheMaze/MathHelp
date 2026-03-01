@@ -103,4 +103,11 @@ public sealed class MultiplicationServiceTests
 
         problems.ShouldAllBe(p => p.Multiplicand == tableNumber);
     }
+
+    [Test]
+    public void GenerateRandomProblems_WithMinGreaterThanMax_ShouldThrow()
+    {
+        Should.Throw<ArgumentOutOfRangeException>(
+            () => _service.GenerateRandomProblems(10, 5, 10));
+    }
 }

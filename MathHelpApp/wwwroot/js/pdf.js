@@ -179,10 +179,9 @@
                 var problems = sheets[s];
                 var challengeTitle = practiceLabel + (sheets.length > 1 ? sheetNumberSuffix.replace('{0}', s + 1) : '');
                 renderPageOfGroups(doc, lib, problems, challengeTitle, false, s * PROBLEMS_PER_PAGE, true, site.siteName, site.siteUrl, PROBLEMS_PER_GROUP);
-            }
-            for (var s = 0; s < sheets.length; s++) {
+                
+                // Immediately add the answer page after each practice page for true interleaving
                 doc.addPage();
-                var problems = sheets[s];
                 var answerTitle = answerLabel + (sheets.length > 1 ? sheetNumberSuffix.replace('{0}', s + 1) : '');
                 renderPageOfGroups(doc, lib, problems, answerTitle, true, s * PROBLEMS_PER_PAGE, false, site.siteName, site.siteUrl, PROBLEMS_PER_GROUP);
             }

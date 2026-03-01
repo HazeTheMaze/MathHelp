@@ -37,8 +37,8 @@ public sealed partial class Home
 
     private PdfType _selectedType = PdfType.Reference;
     private bool _showHelp;
-    private int _minTable = 1;
-    private int _maxTable = 12;
+    private int _minTable = MathConstants.MinTableNumber;
+    private int _maxTable = MathConstants.MaxTableNumber;
     private int _sheetCount = 1;
     private bool _downloading;
     private string? _downloadError;
@@ -48,115 +48,46 @@ public sealed partial class Home
 
     internal void InitializeTabFromQuery()
     {
-        var tab = GetQueryParam("tab");
-        if (string.Equals(tab, "practice", StringComparison.OrdinalIgnoreCase))
-        {
-            _selectedType = PdfType.Practice;
-        }
-        else
-        {
-            _selectedType = PdfType.Reference;
-        }
-    }
-
-    private static Dictionary<string, string> ParseQueryString(string query)
-    {
-        var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        if (string.IsNullOrEmpty(query) || query.Length < 2)
-        {
-            return dict;
-        }
-
-        foreach (var pair in query[1..].Split('&'))
-        {
-            var eq = pair.IndexOf('=', StringComparison.Ordinal);
-            if (eq > 0)
-            {
-                dict[Uri.UnescapeDataString(pair[..eq].Trim())] =
-                    eq < pair.Length - 1 ? Uri.UnescapeDataString(pair[(eq + 1)..].Trim()) : "";
-            }
-            else if (!string.IsNullOrWhiteSpace(pair))
-            {
-                dict[Uri.UnescapeDataString(pair.Trim())] = "";
-            }
-        }
-
-        return dict;
-    }
-
-    private string? GetQueryParam(string name)
-    {
         var uri = new Uri(Navigation.Uri);
-        var dict = ParseQueryString(uri.Query);
-        return dict.TryGetValue(name, out var value) ? value : null;
-    }
-
-    private void SetQueryParam(string name, string value)
-    {
-        var uri = new Uri(Navigation.Uri);
-        var dict = ParseQueryString(uri.Query);
-        dict[name] = value;
-        var newQuery = string.Join(
-            '&',
-            dict.Select(kv => $"{Uri.EscapeDataString(kv.Key)}={Uri.EscapeDataString(kv.Value)}"));
-        var pathPart = uri.GetLeftPart(UriPartial.Path);
-        var path = (pathPart.Length > 1 && pathPart.EndsWith('/'))
-            ? pathPart
-            : pathPart.TrimEnd('/');
-        if (string.IsNullOrEmpty(path))
-        {
-            path = "/";
-        }
-
-        var newUrl = string.IsNullOrEmpty(newQuery) ? path : path + "?" + newQuery;
-        Navigation.NavigateTo(newUrl, replace: true);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        var tab = query["tab"];
+        _selectedType = string.Equals(tab, "practice", StringComparison.OrdinalIgnoreCase)
+            ? PdfType.Practice
+            : PdfType.Reference;
     }
 
     private void SelectType(PdfType type)
     {
         _selectedType = type;
-        SetQueryParam("tab", type == PdfType.Practice ? "practice" : "reference");
+        var tabValue = type == PdfType.Practice ? "practice" : "reference";
+        var newUri = Navigation.GetUriWithQueryParameter("tab", tabValue);
+        Navigation.NavigateTo(newUri, replace: true);
     }
 
-    internal async Task OnDownloadPdf()
-    {
-        _downloadError = null;
-        var validationKey = TableRangeValidation.Validate(_minTable, _maxTable);
-        if (validationKey is not null)
-        {
-            SetValidationError(validationKey);
-            return;
-        }
-        _downloading = true;
-        try
-        {
-            await PdfService.DownloadTablePdfAsync(_minTable, _maxTable, showAnswers: true);
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex, "PDF download failed");
-            _downloadError = Loc["DownloadFailed"].Value;
-        }
-        finally
-        {
-            _downloading = false;
-        }
-    }
+    internal async Task OnDownloadPdf() =>
+        await RunDownloadAsync(() => PdfService.DownloadTablePdfAsync(_minTable, _maxTable, showAnswers: true));
 
-    internal async Task OnDownloadPracticeSheetAsync()
-    {
-        _downloadError = null;
-        var validationKey = TableRangeValidation.Validate(_minTable, _maxTable);
-        if (validationKey is not null)
-        {
-            SetValidationError(validationKey);
-            return;
-        }
-        _downloading = true;
-        try
+    internal async Task OnDownloadPracticeSheetAsync() =>
+        await RunDownloadAsync(async () =>
         {
             var allSheets = BuildPracticeSheets();
             await PdfService.DownloadPracticePdfAsync(allSheets);
+        });
+
+    private async Task RunDownloadAsync(Func<Task> action)
+    {
+        _downloadError = null;
+        var validationKey = TableRangeValidation.Validate(_minTable, _maxTable);
+        if (validationKey is not null)
+        {
+            SetValidationError(validationKey);
+            return;
+        }
+
+        _downloading = true;
+        try
+        {
+            await action();
         }
         catch (Exception ex)
         {
@@ -193,6 +124,7 @@ public sealed partial class Home
             var problems = MathService.GenerateRandomProblems(_minTable, _maxTable, MathConstants.ProblemsPerSheet);
             allSheets.Add(problems);
         }
+
         return allSheets;
     }
 }

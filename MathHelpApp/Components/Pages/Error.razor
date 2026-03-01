@@ -1,17 +1,9 @@
 @page "/Error"
-@inject IStringLocalizer<SharedResources> Loc
 
 <PageTitle>@Loc["ErrorTitle"]</PageTitle>
 
 <h1 class="text-danger">@Loc["ErrorTitle"]</h1>
 <h2 class="text-danger">@Loc["ErrorMessage"]</h2>
-
-@if (ShowRequestId)
-{
-    <p>
-        <strong>@Loc["ErrorRequestId"]</strong> <code>@RequestId</code>
-    </p>
-}
 
 <h3>@Loc["ErrorDevelopmentModeTitle"]</h3>
 <p>@Loc["ErrorDevelopmentModeParagraph1"]</p>

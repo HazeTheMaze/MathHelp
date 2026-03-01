@@ -1,4 +1,6 @@
-using System.Diagnostics;
+using MathHelpApp.Resources;
+using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace MathHelpApp.Components.Pages;
 
@@ -7,10 +9,7 @@ namespace MathHelpApp.Components.Pages;
 /// </summary>
 public sealed partial class Error
 {
-    private string? RequestId { get; set; }
-    private bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
-
-    /// <inheritdoc />
-    protected override void OnInitialized() =>
-        RequestId = Activity.Current?.Id;
+    /// <summary>Localized strings for the page.</summary>
+    [Inject]
+    public IStringLocalizer<SharedResources> Loc { get; set; } = null!;
 }
