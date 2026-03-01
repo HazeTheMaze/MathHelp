@@ -118,8 +118,9 @@ public sealed partial class Home
 
     private List<List<MultiplicationProblem>> BuildPracticeSheets()
     {
+        int clampedCount = Math.Clamp(_sheetCount, 1, MathConstants.MaxSheetCount);
         var allSheets = new List<List<MultiplicationProblem>>();
-        for (int i = 0; i < _sheetCount; i++)
+        for (int i = 0; i < clampedCount; i++)
         {
             var problems = MathService.GenerateRandomProblems(_minTable, _maxTable, MathConstants.ProblemsPerSheet);
             allSheets.Add(problems);
