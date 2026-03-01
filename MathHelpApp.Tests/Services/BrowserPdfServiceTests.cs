@@ -110,6 +110,18 @@ public sealed class BrowserPdfServiceTests
     }
 
     [Test]
+    public void DownloadTablePdfAsync_WithMinGreaterThanMax_ShouldThrow()
+    {
+        SetupLocalizer(_loc);
+        var js = new FakeJsRuntime();
+        var navigation = new FakeNavigationManager("https://example.com/");
+        var sut = new BrowserPdfService(js, navigation, _loc);
+
+        Should.Throw<ArgumentOutOfRangeException>(
+            async () => await sut.DownloadTablePdfAsync(10, 5, showAnswers: true));
+    }
+
+    [Test]
     public async Task DownloadPracticePdfAsync_ShouldInvokeJsWithPracticeTypeAndSheets()
     {
         SetupLocalizer(_loc);

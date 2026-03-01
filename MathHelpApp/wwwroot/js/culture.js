@@ -32,7 +32,7 @@ window.MathHelpCulture = {
         if (qs.get('culture') !== stored) {
             qs.set('culture', stored);
             var url = window.location.pathname + '?' + qs.toString() + window.location.hash;
-            window.location.replace(url);
+            history.replaceState({}, '', url);
         }
     }
 })();

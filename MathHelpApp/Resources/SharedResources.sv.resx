@@ -296,13 +296,13 @@
     <value>Nedladdningen misslyckades. Försök igen.</value>
   </data>
   <data name="Validation.MinTableRange" xml:space="preserve">
-    <value>minTable måste vara mellan {0} och {1}.</value>
+    <value>Minsta tabell måste vara mellan {0} och {1}.</value>
   </data>
   <data name="Validation.MaxTableRange" xml:space="preserve">
-    <value>maxTable måste vara mellan {0} och {1}.</value>
+    <value>Största tabell måste vara mellan {0} och {1}.</value>
   </data>
   <data name="Validation.MinGreaterThanMax" xml:space="preserve">
-    <value>minTable måste vara mindre än eller lika med maxTable.</value>
+    <value>Minsta tabell måste vara mindre än eller lika med största tabell.</value>
   </data>
   <data name="LanguageSv" xml:space="preserve">
     <value>Svenska</value>

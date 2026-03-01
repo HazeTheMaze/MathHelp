@@ -21,6 +21,8 @@ internal sealed class MultiplicationService : IMultiplicationService
 
     public List<MultiplicationProblem> GenerateRandomProblems(int minTable, int maxTable, int count)
     {
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(minTable, maxTable, nameof(minTable));
+
         var problems = new List<MultiplicationProblem>();
 
         for (int i = 0; i < count; i++)
