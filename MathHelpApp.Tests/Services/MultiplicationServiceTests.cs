@@ -110,4 +110,59 @@ public sealed class MultiplicationServiceTests
         Should.Throw<ArgumentOutOfRangeException>(
             () => _service.GenerateRandomProblems(10, 5, 10));
     }
+
+    [Test]
+    public void GenerateRandomProblems_WhenPoolIsLargeEnough_ShouldReturnAllUnique()
+    {
+        var problems = _service.GenerateRandomProblems(1, 12, 100);
+
+        var distinctCount = problems.Distinct().Count();
+        distinctCount.ShouldBe(100);
+    }
+
+    [Test]
+    public void GenerateRandomProblems_WhenPoolEqualsCount_ShouldReturnAllUnique()
+    {
+        var problems = _service.GenerateRandomProblems(1, 10, 100);
+
+        var distinctCount = problems.Distinct().Count();
+        distinctCount.ShouldBe(100);
+    }
+
+    [Test]
+    public void GenerateRandomProblems_WhenPoolSmallerThanCount_ShouldDistributeEvenly()
+    {
+        // Range 6-10: 5 multiplicands * 10 multipliers = 50 unique, 100 / 50 = exactly 2 each
+        var problems = _service.GenerateRandomProblems(6, 10, 100);
+
+        var usageCounts = problems.GroupBy(p => p).Select(g => g.Count()).ToList();
+        usageCounts.Count.ShouldBe(50);
+        usageCounts.ShouldAllBe(c => c == 2);
+    }
+
+    [Test]
+    public void GenerateRandomProblems_WhenPoolAtLeast10_GroupsShouldHaveNoDuplicates()
+    {
+        var problems = _service.GenerateRandomProblems(5, 10, 100);
+
+        for (int g = 0; g < problems.Count / MathConstants.ProblemsPerGroup; g++)
+        {
+            var group = problems
+                .Skip(g * MathConstants.ProblemsPerGroup)
+                .Take(MathConstants.ProblemsPerGroup)
+                .ToList();
+
+            group.Distinct().Count().ShouldBe(group.Count,
+                $"Group {g} contains duplicate problems");
+        }
+    }
+
+    [Test]
+    public void GenerateRandomProblems_SmallPool_ShouldProduceValidProblems()
+    {
+        var problems = _service.GenerateRandomProblems(2, 2, 20);
+
+        problems.Count.ShouldBe(20);
+        problems.ShouldAllBe(p => p.Multiplicand == 2 && p.Multiplier >= 1 && p.Multiplier <= 2);
+    }
 }
