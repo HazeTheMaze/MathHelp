@@ -58,6 +58,8 @@ MathHelpApp/
 
 MathHelpApp.Tests/    # Unit tests (NUnit + Shouldly)
 ```
+## Live site
+https://hazethemaze.github.io/MathHelp/
 
 ## License
 
