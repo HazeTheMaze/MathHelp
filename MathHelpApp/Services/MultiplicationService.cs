@@ -29,20 +29,78 @@ internal sealed class MultiplicationService : IMultiplicationService
         }
 
         var pool = BuildPool(minTable, maxTable);
-        var usageCounts = pool.ToDictionary(p => p, _ => 0);
+        var deck = new List<MultiplicationProblem>(pool);
+        Shuffle(deck);
+
         var result = new List<MultiplicationProblem>(count);
+        int deckIndex = 0;
 
         while (result.Count < count)
         {
-            int needed = Math.Min(MathConstants.ProblemsPerGroup, count - result.Count);
-            var group = SelectGroupProblems(pool, usageCounts, needed);
-            result.AddRange(group);
+            if (deckIndex >= deck.Count)
+            {
+                deckIndex = 0;
+                ReshuffleAvoidingGroupConflicts(deck, result);
+            }
+
+            result.Add(deck[deckIndex++]);
         }
 
         return result;
     }
 
-    private static List<MultiplicationProblem> BuildPool(int minTable, int maxTable)
+    internal void ReshuffleAvoidingGroupConflicts(
+        List<MultiplicationProblem> deck,
+        List<MultiplicationProblem> result)
+    {
+        Shuffle(deck);
+
+        int groupStart = (result.Count / MathConstants.ProblemsPerGroup) * MathConstants.ProblemsPerGroup;
+        if (groupStart == result.Count)
+        {
+            return;
+        }
+
+        var usedInGroup = new HashSet<MultiplicationProblem>(result.Skip(groupStart));
+        int slotsLeft = Math.Min(
+            MathConstants.ProblemsPerGroup - usedInGroup.Count,
+            deck.Count);
+
+        for (int i = 0; i < slotsLeft; i++)
+        {
+            if (!usedInGroup.Contains(deck[i]))
+            {
+                usedInGroup.Add(deck[i]);
+                continue;
+            }
+
+            int swapIdx = FindNonConflicting(deck, usedInGroup, slotsLeft);
+            if (swapIdx >= 0)
+            {
+                (deck[i], deck[swapIdx]) = (deck[swapIdx], deck[i]);
+            }
+
+            usedInGroup.Add(deck[i]);
+        }
+    }
+
+    internal static int FindNonConflicting(
+        List<MultiplicationProblem> deck,
+        HashSet<MultiplicationProblem> usedInGroup,
+        int searchFrom)
+    {
+        for (int j = searchFrom; j < deck.Count; j++)
+        {
+            if (!usedInGroup.Contains(deck[j]))
+            {
+                return j;
+            }
+        }
+
+        return -1;
+    }
+
+    internal static List<MultiplicationProblem> BuildPool(int minTable, int maxTable)
     {
         var pool = new List<MultiplicationProblem>();
         for (int a = minTable; a <= maxTable; a++)
@@ -56,39 +114,7 @@ internal sealed class MultiplicationService : IMultiplicationService
         return pool;
     }
 
-    private List<MultiplicationProblem> SelectGroupProblems(
-        List<MultiplicationProblem> pool,
-        Dictionary<MultiplicationProblem, int> usageCounts,
-        int needed)
-    {
-        var group = new List<MultiplicationProblem>(needed);
-        var usedInGroup = new HashSet<MultiplicationProblem>();
-
-        for (int i = 0; i < needed; i++)
-        {
-            var candidates = pool
-                .Where(p => !usedInGroup.Contains(p))
-                .ToList();
-
-            if (candidates.Count == 0)
-            {
-                candidates = new List<MultiplicationProblem>(pool);
-            }
-
-            int minUsage = candidates.Min(p => usageCounts[p]);
-            var best = candidates.Where(p => usageCounts[p] == minUsage).ToList();
-
-            var selected = best[_random.Next(best.Count)];
-            group.Add(selected);
-            usedInGroup.Add(selected);
-            usageCounts[selected]++;
-        }
-
-        Shuffle(group);
-        return group;
-    }
-
-    private void Shuffle<T>(List<T> list)
+    internal void Shuffle<T>(List<T> list)
     {
         for (int i = list.Count - 1; i > 0; i--)
         {
