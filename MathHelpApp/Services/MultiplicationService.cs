@@ -23,15 +23,77 @@ internal sealed class MultiplicationService : IMultiplicationService
     {
         ArgumentOutOfRangeException.ThrowIfGreaterThan(minTable, maxTable, nameof(minTable));
 
-        var problems = new List<MultiplicationProblem>();
-
-        for (int i = 0; i < count; i++)
+        if (count == 0)
         {
-            int multiplicand = _random.Next(minTable, maxTable + 1);
-            int multiplier = _random.Next(MathConstants.MinTableNumber, maxTable + 1);
-            problems.Add(new MultiplicationProblem(multiplicand, multiplier));
+            return [];
         }
 
-        return problems;
+        var pool = BuildPool(minTable, maxTable);
+        var usageCounts = pool.ToDictionary(p => p, _ => 0);
+        var result = new List<MultiplicationProblem>(count);
+
+        while (result.Count < count)
+        {
+            int needed = Math.Min(MathConstants.ProblemsPerGroup, count - result.Count);
+            var group = SelectGroupProblems(pool, usageCounts, needed);
+            result.AddRange(group);
+        }
+
+        return result;
+    }
+
+    private static List<MultiplicationProblem> BuildPool(int minTable, int maxTable)
+    {
+        var pool = new List<MultiplicationProblem>();
+        for (int a = minTable; a <= maxTable; a++)
+        {
+            for (int b = MathConstants.MinTableNumber; b <= maxTable; b++)
+            {
+                pool.Add(new MultiplicationProblem(a, b));
+            }
+        }
+
+        return pool;
+    }
+
+    private List<MultiplicationProblem> SelectGroupProblems(
+        List<MultiplicationProblem> pool,
+        Dictionary<MultiplicationProblem, int> usageCounts,
+        int needed)
+    {
+        var group = new List<MultiplicationProblem>(needed);
+        var usedInGroup = new HashSet<MultiplicationProblem>();
+
+        for (int i = 0; i < needed; i++)
+        {
+            var candidates = pool
+                .Where(p => !usedInGroup.Contains(p))
+                .ToList();
+
+            if (candidates.Count == 0)
+            {
+                candidates = new List<MultiplicationProblem>(pool);
+            }
+
+            int minUsage = candidates.Min(p => usageCounts[p]);
+            var best = candidates.Where(p => usageCounts[p] == minUsage).ToList();
+
+            var selected = best[_random.Next(best.Count)];
+            group.Add(selected);
+            usedInGroup.Add(selected);
+            usageCounts[selected]++;
+        }
+
+        Shuffle(group);
+        return group;
+    }
+
+    private void Shuffle<T>(List<T> list)
+    {
+        for (int i = list.Count - 1; i > 0; i--)
+        {
+            int j = _random.Next(i + 1);
+            (list[i], list[j]) = (list[j], list[i]);
+        }
     }
 }
